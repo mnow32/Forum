@@ -1,10 +1,15 @@
+using Forum.API.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetValue<string>("ConnectionStrings:ForumDbConnection");
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
