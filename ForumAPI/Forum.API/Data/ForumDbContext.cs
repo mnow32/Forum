@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Data
 {
-    public class ForumDbContext : DbContext
+    internal class ForumDbContext : DbContext
     {
-        public DbSet<Post> Posts { get; set; }
+        internal DbSet<Post> Posts { get; set; }
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         { 
         
@@ -14,6 +14,29 @@ namespace Forum.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Post>()
+                .Property(p => p.Content)
+                .IsRequired();
+
+
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.ParentPost)
+                .WithMany(p => p.ChildrenPosts)
+                .HasForeignKey(p => p.ParentPostId)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.ForumThread)
+                .WithMany(ft => ft.Posts)
+                .HasForeignKey(p => p.ThreadId)
+                .IsRequired();
+
+            modelBuilder.Entity<ForumThread>()
+                .HasOne(ft => ft.Forum)
+                .WithMany(f => f.ForumThreads)
+                .HasForeignKey(ft => ft.ForumId)
+                .IsRequired();
 
         }
     }
