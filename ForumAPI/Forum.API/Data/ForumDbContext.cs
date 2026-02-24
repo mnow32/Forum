@@ -15,21 +15,27 @@ namespace Forum.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Post>()
-                .Property(p => p.Content)
-                .IsRequired();
+            modelBuilder.Entity<Post>(eb =>
+            {
+                eb.Property(p => p.CreatedAt).HasDefaultValueSql("getutcdate()");
+            });
 
+            modelBuilder.Entity<ForumThread>(eb =>
+            {
+                eb.Property(ft => ft.CreatedAt).HasDefaultValueSql("getutcdate()");
+            });
 
+            // on delete children posts must be loaded
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ParentPost)
                 .WithMany(p => p.ChildrenPosts)
                 .HasForeignKey(p => p.ParentPostId)
-                .IsRequired(false);
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ForumThread)
                 .WithMany(ft => ft.Posts)
-                .HasForeignKey(p => p.ThreadId)
+                .HasForeignKey(p => p.ForumThreadId)
                 .IsRequired();
 
             modelBuilder.Entity<ForumThread>()

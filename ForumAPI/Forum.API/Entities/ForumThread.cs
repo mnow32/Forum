@@ -5,7 +5,9 @@
         public int Id { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
 
         // navigation properties
         public required int ForumId { get; set; }
