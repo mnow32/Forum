@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public required string Content { get; set; }
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
 
@@ -12,7 +12,8 @@
         public int? ParentPostId { get; set; }
         public Post? ParentPost { get; set; }
         public List<Post> ChildrenPosts { get; set; } = new List<Post>();
-        public required int ThreadId { get; set; }
+
+        public required int ForumThreadId { get; set; }
         public ForumThread ForumThread { get; set; } = null!;
 
 
