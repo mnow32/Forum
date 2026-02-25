@@ -2,7 +2,7 @@
 
 namespace Forum.API.Interfaces
 {
-    public interface ITopicRepository
+    public interface ITopicsRepository
     {
         Task<Topic> GetTopicByIdAsync(int id);
     }

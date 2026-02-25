@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
+builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
+builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 
 var app = builder.Build();
 
