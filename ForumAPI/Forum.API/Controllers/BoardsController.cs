@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/boards")]
     [ApiController]
     public class BoardsController(IBoardsRepository boardsRepository) : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace Forum.API.Controllers
         }
 
         [HttpGet]
-        [Route("/{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> GetBoardById([FromRoute] int id)
         {
             var board = await boardsRepository.GetBoardByIdAsync(id);
