@@ -13,8 +13,8 @@
         public Post? ParentPost { get; set; }
         public List<Post> ChildrenPosts { get; set; } = new List<Post>();
 
-        public required int ForumThreadId { get; set; }
-        public ForumThread ForumThread { get; set; } = null!;
+        public required int TopicId { get; set; }
+        public Topic Topic { get; set; } = null!;
 
 
     }

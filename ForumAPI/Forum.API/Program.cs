@@ -1,4 +1,6 @@
 using Forum.API.Data;
+using Forum.API.Data.Repositories;
+using Forum.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 
 var app = builder.Build();
 

@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Data
 {
-    internal class ForumDbContext : DbContext
+    public class ForumDbContext : DbContext
     {
         internal DbSet<Post> Posts { get; set; }
+        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Board> Boards { get; set; }
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         { 
         
@@ -20,7 +22,7 @@ namespace Forum.API.Data
                 eb.Property(p => p.CreatedAt).HasDefaultValueSql("getutcdate()");
             });
 
-            modelBuilder.Entity<ForumThread>(eb =>
+            modelBuilder.Entity<Topic>(eb =>
             {
                 eb.Property(ft => ft.CreatedAt).HasDefaultValueSql("getutcdate()");
             });
@@ -29,19 +31,18 @@ namespace Forum.API.Data
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ParentPost)
                 .WithMany(p => p.ChildrenPosts)
-                .HasForeignKey(p => p.ParentPostId)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .HasForeignKey(p => p.ParentPostId);
 
             modelBuilder.Entity<Post>()
-                .HasOne(p => p.ForumThread)
+                .HasOne(p => p.Topic)
                 .WithMany(ft => ft.Posts)
-                .HasForeignKey(p => p.ForumThreadId)
+                .HasForeignKey(p => p.TopicId)
                 .IsRequired();
 
-            modelBuilder.Entity<ForumThread>()
-                .HasOne(ft => ft.Forum)
-                .WithMany(f => f.ForumThreads)
-                .HasForeignKey(ft => ft.ForumId)
+            modelBuilder.Entity<Topic>()
+                .HasOne(ft => ft.Board)
+                .WithMany(f => f.Topics)
+                .HasForeignKey(ft => ft.BoardId)
                 .IsRequired();
 
         }

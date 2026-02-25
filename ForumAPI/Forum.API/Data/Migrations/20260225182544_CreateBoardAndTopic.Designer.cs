@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.API.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20260224151014_Created ForumThread and Forum table. Configured relationships between Post, Forum and ForumThread")]
-    partial class CreatedForumThreadandForumtableConfiguredrelationshipsbetweenPostForumandForumThread
+    [Migration("20260225182544_CreateBoardAndTopic")]
+    partial class CreateBoardAndTopic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Forum.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Forum.API.Entities.Forum", b =>
+            modelBuilder.Entity("Forum.API.Entities.Board", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,41 +43,7 @@ namespace Forum.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Forum");
-                });
-
-            modelBuilder.Entity("Forum.API.Entities.ForumThread", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getutcdate()");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ForumId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ForumId");
-
-                    b.ToTable("ForumThread");
+                    b.ToTable("Boards");
                 });
 
             modelBuilder.Entity("Forum.API.Entities.Post", b =>
@@ -97,10 +63,10 @@ namespace Forum.API.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<int>("ForumThreadId")
+                    b.Property<int?>("ParentPostId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ParentPostId")
+                    b.Property<int>("TopicId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -108,55 +74,88 @@ namespace Forum.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ForumThreadId");
-
                     b.HasIndex("ParentPostId");
+
+                    b.HasIndex("TopicId");
 
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Forum.API.Entities.ForumThread", b =>
+            modelBuilder.Entity("Forum.API.Entities.Topic", b =>
                 {
-                    b.HasOne("Forum.API.Entities.Forum", "Forum")
-                        .WithMany("ForumThreads")
-                        .HasForeignKey("ForumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("Forum");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
+
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Forum.API.Entities.Post", b =>
                 {
-                    b.HasOne("Forum.API.Entities.ForumThread", "ForumThread")
+                    b.HasOne("Forum.API.Entities.Post", "ParentPost")
+                        .WithMany("ChildrenPosts")
+                        .HasForeignKey("ParentPostId");
+
+                    b.HasOne("Forum.API.Entities.Topic", "Topic")
                         .WithMany("Posts")
-                        .HasForeignKey("ForumThreadId")
+                        .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Forum.API.Entities.Post", "ParentPost")
-                        .WithMany("ChildrenPosts")
-                        .HasForeignKey("ParentPostId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.Navigation("ForumThread");
-
                     b.Navigation("ParentPost");
+
+                    b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("Forum.API.Entities.Forum", b =>
+            modelBuilder.Entity("Forum.API.Entities.Topic", b =>
                 {
-                    b.Navigation("ForumThreads");
+                    b.HasOne("Forum.API.Entities.Board", "Board")
+                        .WithMany("Topics")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
                 });
 
-            modelBuilder.Entity("Forum.API.Entities.ForumThread", b =>
+            modelBuilder.Entity("Forum.API.Entities.Board", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("Topics");
                 });
 
             modelBuilder.Entity("Forum.API.Entities.Post", b =>
                 {
                     b.Navigation("ChildrenPosts");
+                });
+
+            modelBuilder.Entity("Forum.API.Entities.Topic", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

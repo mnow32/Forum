@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Forum.API.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedForumThreadandForumtableConfiguredrelationshipsbetweenPostForumandForumThread : Migration
+    public partial class CreateBoardAndTopic : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,20 +29,20 @@ namespace Forum.API.Migrations
                 oldType: "datetime2");
 
             migrationBuilder.AddColumn<int>(
-                name: "ForumThreadId",
-                table: "Posts",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
                 name: "ParentPostId",
                 table: "Posts",
                 type: "int",
                 nullable: true);
 
+            migrationBuilder.AddColumn<int>(
+                name: "TopicId",
+                table: "Posts",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
             migrationBuilder.CreateTable(
-                name: "Forum",
+                name: "Boards",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -52,11 +52,11 @@ namespace Forum.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Forum", x => x.Id);
+                    table.PrimaryKey("PK_Boards", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ForumThread",
+                name: "Topics",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -65,23 +65,18 @@ namespace Forum.API.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getutcdate()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ForumId = table.Column<int>(type: "int", nullable: false)
+                    BoardId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ForumThread", x => x.Id);
+                    table.PrimaryKey("PK_Topics", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ForumThread_Forum_ForumId",
-                        column: x => x.ForumId,
-                        principalTable: "Forum",
+                        name: "FK_Topics_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Posts_ForumThreadId",
-                table: "Posts",
-                column: "ForumThreadId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ParentPostId",
@@ -89,17 +84,14 @@ namespace Forum.API.Migrations
                 column: "ParentPostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ForumThread_ForumId",
-                table: "ForumThread",
-                column: "ForumId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Posts_ForumThread_ForumThreadId",
+                name: "IX_Posts_TopicId",
                 table: "Posts",
-                column: "ForumThreadId",
-                principalTable: "ForumThread",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                column: "TopicId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Topics_BoardId",
+                table: "Topics",
+                column: "BoardId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Posts_Posts_ParentPostId",
@@ -107,39 +99,47 @@ namespace Forum.API.Migrations
                 column: "ParentPostId",
                 principalTable: "Posts",
                 principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Posts_Topics_TopicId",
+                table: "Posts",
+                column: "TopicId",
+                principalTable: "Topics",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Posts_ForumThread_ForumThreadId",
-                table: "Posts");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Posts_Posts_ParentPostId",
                 table: "Posts");
 
-            migrationBuilder.DropTable(
-                name: "ForumThread");
-
-            migrationBuilder.DropTable(
-                name: "Forum");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Posts_ForumThreadId",
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_Topics_TopicId",
                 table: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Topics");
+
+            migrationBuilder.DropTable(
+                name: "Boards");
 
             migrationBuilder.DropIndex(
                 name: "IX_Posts_ParentPostId",
                 table: "Posts");
 
-            migrationBuilder.DropColumn(
-                name: "ForumThreadId",
+            migrationBuilder.DropIndex(
+                name: "IX_Posts_TopicId",
                 table: "Posts");
 
             migrationBuilder.DropColumn(
                 name: "ParentPostId",
+                table: "Posts");
+
+            migrationBuilder.DropColumn(
+                name: "TopicId",
                 table: "Posts");
 
             migrationBuilder.AlterColumn<DateTime>(
