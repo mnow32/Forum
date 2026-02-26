@@ -6,7 +6,7 @@ namespace Forum.API.Controllers
 {
     [Route("api/topics")]
     [ApiController]
-    public class TopicsController(ITopicRepository topicRepository) : ControllerBase
+    public class TopicsController(ITopicsRepository topicRepository) : ControllerBase
     {
         [HttpGet]
         [Route("{id}")]

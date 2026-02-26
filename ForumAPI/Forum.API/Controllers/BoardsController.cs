@@ -1,4 +1,6 @@
-﻿using Forum.API.Entities;
+﻿using Forum.API.DTOs;
+using Forum.API.Entities;
+using Forum.API.Extensions;
 using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,14 @@ namespace Forum.API.Controllers
         {
             var board = await boardsRepository.GetBoardByIdAsync(id);
             return Ok(board);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
+        {
+            var newBoard = BoardExtensions.FromDto(boardDto);
+            int id = await boardsRepository.CreateAsync(newBoard);
+            return Created();
         }
     }
 }

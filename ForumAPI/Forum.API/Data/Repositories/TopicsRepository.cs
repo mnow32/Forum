@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Data.Repositories
 {
-    public class TopicRepository(ForumDbContext dbContext) : ITopicRepository
+    public class TopicsRepository(ForumDbContext dbContext) : ITopicsRepository
     {
         public async Task<Topic> GetTopicByIdAsync(int id)
         {

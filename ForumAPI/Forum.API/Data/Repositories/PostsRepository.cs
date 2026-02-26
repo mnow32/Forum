@@ -1,4 +1,5 @@
 ﻿using Forum.API.Entities;
+using Forum.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Data.Repositories

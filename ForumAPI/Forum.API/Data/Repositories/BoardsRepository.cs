@@ -19,5 +19,12 @@ namespace Forum.API.Data.Repositories
                 .SingleOrDefaultAsync(b => b.Id == id);
             return board!;
         }
+
+        public async Task<int> CreateAsync(Board board)
+        {
+            await dbContext.Boards.AddAsync(board);
+            await dbContext.SaveChangesAsync();
+            return board.Id;
+        }
     }
 }

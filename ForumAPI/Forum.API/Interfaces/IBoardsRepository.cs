@@ -6,5 +6,6 @@ namespace Forum.API.Interfaces
     {
         Task<IEnumerable<Board>> GetAllBoardsAsync();
         Task<Board> GetBoardByIdAsync(int id);
+        Task<int> CreateAsync(Board board);
     }
 }

@@ -3,15 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Data
 {
-    public class ForumDbContext : DbContext
+    public class ForumDbContext(DbContextOptions<ForumDbContext> options) : DbContext(options)
     {
         internal DbSet<Post> Posts { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Board> Boards { get; set; }
-        public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
-        { 
-        
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,7 +23,6 @@ namespace Forum.API.Data
                 eb.Property(ft => ft.CreatedAt).HasDefaultValueSql("getutcdate()");
             });
 
-            // on delete children posts must be loaded
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ParentPost)
                 .WithMany(p => p.ChildrenPosts)
