@@ -1,8 +1,9 @@
-﻿using Forum.API.DTOs;
+﻿using AutoMapper;
+using Forum.API.DTOs;
 using Forum.API.Entities;
-using Forum.API.Extensions;
 using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Controllers
@@ -18,8 +19,7 @@ namespace Forum.API.Controllers
             return Ok(boards);
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetBoardById([FromRoute] int id)
         {
             var board = await boardsRepository.GetBoardByIdAsync(id);
@@ -29,9 +29,31 @@ namespace Forum.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
         {
-            var newBoard = BoardExtensions.FromDto(boardDto);
-            int id = await boardsRepository.CreateAsync(newBoard);
-            return Created();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); 
+            } 
+            int id = await boardsRepository.CreateBoardAsync(boardDto);
+            return CreatedAtAction(nameof(GetBoardById), new { id }, null);
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateBoard([FromRoute] int id, [FromBody] UpdateBoardDto boardDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await boardsRepository.UpdateBoardAsync(id, boardDto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBoard([FromRoute] int id)
+        {
+            await boardsRepository.DeleteBoardAsync(id);
+            return NoContent();
+        }
+
     }
 }

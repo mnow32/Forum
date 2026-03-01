@@ -1,9 +1,8 @@
-﻿using Forum.API.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Forum.API.DTOs
 {
-    public class CreateBoardDto
+    public class UpdateBoardDto
     {
         [StringLength(100, MinimumLength = 5)]
         public required string Name { get; set; }

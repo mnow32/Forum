@@ -1,14 +1,12 @@
 ﻿using Forum.API.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace Forum.API.DTOs
 {
-    public class CreateBoardDto
+    public class BoardDto
     {
-        [StringLength(100, MinimumLength = 5)]
+        public int Id { get; set; }
         public required string Name { get; set; }
-
-        [StringLength(400, MinimumLength = 5)]
         public required string Description { get; set; }
+        public List<TopicDto> Topics { get; set; } = new List<TopicDto>();
     }
 }
