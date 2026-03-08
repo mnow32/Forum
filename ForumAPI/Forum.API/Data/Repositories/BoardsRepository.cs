@@ -11,7 +11,12 @@ namespace Forum.API.Data.Repositories
         public async Task<IEnumerable<BoardDto>> GetAllBoardsAsync()
         {
             var boards = await dbContext.Boards.ToListAsync();
-            var boardDtos = mapper.Map<IEnumerable<Board>, IEnumerable<BoardDto>>(boards);
+            if (boards is null)
+            {
+                //TODO: Add custom exception
+                throw new Exception();
+            }
+            var boardDtos = mapper.Map<IEnumerable<BoardDto>>(boards);
             return boardDtos;
         }
 
@@ -44,6 +49,7 @@ namespace Forum.API.Data.Repositories
                 //TODO: Add custom exception
                 throw new Exception();
             }
+            //TODO: Add logic for both boardDto properies being null
             mapper.Map(boardDto, board);
             await dbContext.SaveChangesAsync();
         }
