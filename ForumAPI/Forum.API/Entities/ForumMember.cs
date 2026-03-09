@@ -2,8 +2,9 @@
 {
     public class ForumMember
     {
-        public required string Id { get; set; }
+        public string Id { get; set; } = null!;
         public required string DisplayName { get; set; }
+        public required string Email { get; set; }
         public string? Gender { get; set; }
         public string? Country { get; set; }
         public string? Descripiton { get; set; }

@@ -2,6 +2,7 @@ using Forum.API.Data;
 using Forum.API.Data.Repositories;
 using Forum.API.Entities;
 using Forum.API.Interfaces;
+using Forum.API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(co
 builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.LicenseKey = automapperLicenseKey;
@@ -28,6 +30,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddIdentityCore<ForumUser>(options =>
 {
     options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
     options.User.RequireUniqueEmail = true;
 })
     .AddRoles<IdentityRole>()
