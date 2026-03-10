@@ -3,6 +3,7 @@ using Forum.API.Interfaces;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Forum.API.Services
@@ -45,6 +46,19 @@ namespace Forum.API.Services
             var tokenHandler = new JsonWebTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return token;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = RandomNumberGenerator.GetBytes(64);
+            return Convert.ToBase64String(randomBytes);
+        }
+
+        public string HashRefreshToken(string refreshToken)
+        {
+            using SHA256 sha = SHA256.Create();
+            var hashedToken = sha.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
+            return Convert.ToBase64String(hashedToken);
         }
     }
 }
