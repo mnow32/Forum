@@ -2,6 +2,7 @@ using Forum.API.Data;
 using Forum.API.Data.Repositories;
 using Forum.API.Entities;
 using Forum.API.Interfaces;
+using Forum.API.Seeding;
 using Forum.API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IForumSeeder, ForumSeeder>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.LicenseKey = automapperLicenseKey;
@@ -38,6 +40,12 @@ builder.Services.AddIdentityCore<ForumUser>(options =>
 
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<IForumSeeder>();
+    await seeder.SeedAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

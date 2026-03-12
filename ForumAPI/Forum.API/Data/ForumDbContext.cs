@@ -1,4 +1,5 @@
 ﻿using Forum.API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace Forum.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            
             modelBuilder.Entity<ForumMember>(eb =>
             {
                 eb.Property(fm => fm.CreatedAt).HasDefaultValueSql("getutcdate()");
