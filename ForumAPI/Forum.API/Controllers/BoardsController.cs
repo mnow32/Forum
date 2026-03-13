@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Forum.API.Constants;
 using Forum.API.DTOs;
 using Forum.API.Entities;
 using Forum.API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,7 @@ namespace Forum.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
         {
             if (!ModelState.IsValid)
@@ -38,6 +41,7 @@ namespace Forum.API.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
         public async Task<IActionResult> UpdateBoard([FromRoute] int id, [FromBody] UpdateBoardDto boardDto)
         {
             if (!ModelState.IsValid)
@@ -49,6 +53,7 @@ namespace Forum.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
         public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
             await boardsRepository.DeleteBoardAsync(id);

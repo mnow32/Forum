@@ -1,18 +1,30 @@
+using Forum.API.Constants;
 using Forum.API.Data;
 using Forum.API.Data.Repositories;
 using Forum.API.Entities;
 using Forum.API.Interfaces;
 using Forum.API.Seeding;
 using Forum.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Reflection;
+using System.Text;
+using System.Configuration;
+using Microsoft.IdentityModel.Protocols.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetValue<string>("ConnectionStrings:ForumDbConnection");
-var automapperLicenseKey = builder.Configuration["Forum:AutomapperLicenseKey"];
+//TODO: Throw custom exceptions
+var connectionString = builder.Configuration["ConnectionStrings:ForumDbConnection"] 
+    ?? throw new InvalidConfigurationException("Could not retrieve database connection string from configuration file");
+var automapperLicenseKey = builder.Configuration["Forum:AutomapperLicenseKey"] 
+    ?? throw new InvalidConfigurationException("Could not retrieve Automapper license key from configuration file");
+var tokenKey = builder.Configuration["Forum:TokenKey"] 
+    ?? throw new InvalidConfigurationException("Could not retrieve token key from configuration file");
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -38,6 +50,22 @@ builder.Services.AddIdentityCore<ForumUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ForumDbContext>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(jwtOptions =>
+    {
+        jwtOptions.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(AuthorizationPolicies.RequireAdministrator, policy => policy.RequireRole(ForumRoles.Administrator))
+    .AddPolicy(AuthorizationPolicies.RequireModerator, policy => policy.RequireRole(ForumRoles.Administrator, ForumRoles.Moderator));
+
 
 var app = builder.Build();
 
@@ -56,6 +84,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

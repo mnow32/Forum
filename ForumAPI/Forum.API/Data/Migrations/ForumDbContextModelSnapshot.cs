@@ -40,7 +40,7 @@ namespace Forum.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Boards");
+                    b.ToTable("Boards", (string)null);
                 });
 
             modelBuilder.Entity("Forum.API.Entities.ForumMember", b =>
@@ -75,7 +75,7 @@ namespace Forum.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("Forum.API.Entities.ForumUser", b =>
@@ -186,7 +186,7 @@ namespace Forum.API.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("Forum.API.Entities.Reply", b =>
@@ -220,7 +220,7 @@ namespace Forum.API.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Replies");
+                    b.ToTable("Replies", (string)null);
                 });
 
             modelBuilder.Entity("Forum.API.Entities.Topic", b =>
@@ -260,7 +260,7 @@ namespace Forum.API.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Topics");
+                    b.ToTable("Topics", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

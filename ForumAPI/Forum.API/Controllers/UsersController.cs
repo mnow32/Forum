@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Forum.API.Constants;
 using Forum.API.DTOs;
 using Forum.API.Entities;
 using Forum.API.Interfaces;
@@ -38,9 +39,10 @@ namespace Forum.API.Controllers
                 return ValidationProblem();
             }
 
-
+            await userManager.AddToRoleAsync(newForumUser, ForumRoles.Member);
+            await SetRefreshTokenCookie(newForumUser);
             var userDto = mapper.Map<ForumUserDto>(newForumUser);
-            userDto.Token = tokenService.GenerateToken(newForumUser);
+            userDto.Token = await tokenService.GenerateToken(newForumUser);
 
             return userDto;
         }
@@ -62,7 +64,7 @@ namespace Forum.API.Controllers
 
             await SetRefreshTokenCookie(user);
             var userDto = mapper.Map<ForumUserDto>(user);
-            userDto.Token = tokenService.GenerateToken(user);
+            userDto.Token = await tokenService.GenerateToken(user);
 
             return userDto;
         }
@@ -86,7 +88,7 @@ namespace Forum.API.Controllers
 
             await SetRefreshTokenCookie(user);
             var userDto = mapper.Map<ForumUserDto>(user);
-            userDto.Token = tokenService.GenerateToken(user);
+            userDto.Token = await tokenService.GenerateToken(user);
 
             return userDto;
         }

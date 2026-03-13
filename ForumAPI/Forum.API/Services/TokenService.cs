@@ -1,5 +1,6 @@
 ﻿using Forum.API.Entities;
 using Forum.API.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -8,9 +9,9 @@ using System.Text;
 
 namespace Forum.API.Services
 {
-    public class TokenService(IConfiguration config) : ITokenService
+    public class TokenService(IConfiguration config, UserManager<ForumUser> userManager) : ITokenService
     {
-        public string GenerateToken(ForumUser user)
+        public async Task<string> GenerateToken(ForumUser user)
         {
             var tokenKey = config.GetValue<string>("Forum:TokenKey");
             if (tokenKey is null)
@@ -33,6 +34,13 @@ namespace Forum.API.Services
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ClaimTypes.Email, user.Email!),
             };
+
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims);
 
