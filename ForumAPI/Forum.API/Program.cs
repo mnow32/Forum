@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Configuration;
 using Microsoft.IdentityModel.Protocols.Configuration;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ var tokenKey = builder.Configuration["Forum:TokenKey"]
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString).EnableSensitiveDataLogging());
 builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
@@ -66,6 +67,11 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy(AuthorizationPolicies.RequireAdministrator, policy => policy.RequireRole(ForumRoles.Administrator))
     .AddPolicy(AuthorizationPolicies.RequireModerator, policy => policy.RequireRole(ForumRoles.Administrator, ForumRoles.Moderator));
 
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
+
 
 var app = builder.Build();
 
@@ -74,6 +80,8 @@ using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<IForumSeeder>();
     await seeder.SeedAsync();
 }
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -12,7 +12,7 @@ namespace Forum.API.Controllers
 {
     [Route("api/boards")]
     [ApiController]
-    public class BoardsController(IBoardsRepository boardsRepository) : ControllerBase
+    public class BoardsController(IBoardsRepository boardsRepository, ILogger<BoardsController> logger) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetAllBoards()
@@ -24,6 +24,7 @@ namespace Forum.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBoardById([FromRoute] int id)
         {
+            logger.LogInformation("Getting board with id {@id}", id);
             var board = await boardsRepository.GetBoardByIdAsync(id);
             return Ok(board);
         }
