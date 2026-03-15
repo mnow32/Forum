@@ -15,6 +15,7 @@ using System.Text;
 using System.Configuration;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Serilog;
+using Forum.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,6 +81,8 @@ using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<IForumSeeder>();
     await seeder.SeedAsync();
 }
+
+app.UseExceptionHandling();
 
 app.UseSerilogRequestLogging();
 
