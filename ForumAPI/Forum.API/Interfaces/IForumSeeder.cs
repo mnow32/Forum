@@ -1,4 +1,4 @@
-﻿namespace Forum.API.Seeding
+﻿namespace Forum.API.Interfaces
 {
     internal interface IForumSeeder
     {

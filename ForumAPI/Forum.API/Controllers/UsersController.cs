@@ -17,17 +17,6 @@ namespace Forum.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ForumUserDto>> Register([FromBody] RegisterDto registerDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState); 
-            }
-
-            var user = await userManager.FindByEmailAsync(registerDto.Email);
-            if (user is not null)
-            {
-                return BadRequest("Email already exists");
-            }
-
             var newForumUser = mapper.Map<ForumUser>(registerDto);
 
             var result = await userManager.CreateAsync(newForumUser, registerDto.Password);
@@ -36,6 +25,11 @@ namespace Forum.API.Controllers
             {
                 //TODO: Add error logging
                 //result.Errors
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("identity", error.Description);
+                }
+
                 return ValidationProblem();
             }
 

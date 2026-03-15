@@ -47,6 +47,7 @@ builder.Services.AddIdentityCore<ForumUser>(options =>
 {
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = false;
     options.User.RequireUniqueEmail = true;
 })
     .AddRoles<IdentityRole>()

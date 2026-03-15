@@ -30,7 +30,7 @@ namespace Forum.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
+        //[Authorize(Policy = AuthorizationPolicies.RequireModerator)]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
         {
             if (!ModelState.IsValid)
