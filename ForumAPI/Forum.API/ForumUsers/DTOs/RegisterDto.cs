@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Forum.API.DTOs
+namespace Forum.API.ForumUsers.DTOs
 {
     public class RegisterDto
     {

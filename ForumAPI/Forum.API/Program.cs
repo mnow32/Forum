@@ -1,4 +1,3 @@
-using Forum.API.Constants;
 using Forum.API.Data;
 using Forum.API.Data.Repositories;
 using Forum.API.Entities;
@@ -16,6 +15,9 @@ using System.Configuration;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Serilog;
 using Forum.API.Extensions;
+using Forum.API.Authorization;
+using Forum.API.ForumUsers;
+using Forum.API.Authorization.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,10 @@ builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IForumUserContext, ForumUserContext>();
+builder.Services.AddScoped<IOperationAuthorizationService<Reply>, OperationAuthorizationService<Reply>>();
+builder.Services.AddScoped<IOperationAuthorizationService<Post>, OperationAuthorizationService<Post>>();
+builder.Services.AddScoped<IOperationAuthorizationService<Topic>, OperationAuthorizationService<Topic>>();
 builder.Services.AddScoped<IForumSeeder, ForumSeeder>();
 builder.Services.AddAutoMapper(cfg =>
 {

@@ -1,6 +1,8 @@
-﻿namespace Forum.API.Entities
+﻿using Forum.API.Interfaces;
+
+namespace Forum.API.Entities
 {
-    public class Post
+    public class Post : IOwnable
     {
         public int Id { get; set; }
         public required string Content { get; set; }

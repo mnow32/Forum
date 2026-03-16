@@ -1,4 +1,4 @@
-﻿namespace Forum.API.DTOs
+﻿namespace Forum.API.ForumUsers.DTOs
 {
     public class ForumUserDto
     {
