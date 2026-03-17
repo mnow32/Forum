@@ -39,10 +39,7 @@ builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IForumUserContext, ForumUserContext>();
-builder.Services.AddScoped<IOperationAuthorizationService<Reply>, OperationAuthorizationService<Reply>>();
-builder.Services.AddScoped<IOperationAuthorizationService<Post>, OperationAuthorizationService<Post>>();
-builder.Services.AddScoped<IOperationAuthorizationService<Topic>, OperationAuthorizationService<Topic>>();
+builder.Services.AddScoped<IOperationAuthorizationService, OperationAuthorizationService>();
 builder.Services.AddScoped<IForumSeeder, ForumSeeder>();
 builder.Services.AddAutoMapper(cfg =>
 {

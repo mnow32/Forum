@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Forum.API.Constants;
-using Forum.API.DTOs;
+using Forum.API.Authorization.Constants;
 using Forum.API.Entities;
+using Forum.API.ForumUsers.DTOs;
 using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

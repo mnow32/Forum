@@ -1,4 +1,4 @@
-﻿namespace Forum.API.Constants
+﻿namespace Forum.API.Authorization.Constants
 {
     public class ResourceOperations
     {

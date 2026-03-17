@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Forum.API.Constants;
+using Forum.API.Authorization.Constants;
 using Forum.API.DTOs;
 using Forum.API.Entities;
 using Forum.API.Interfaces;
@@ -30,7 +30,7 @@ namespace Forum.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Policy = AuthorizationPolicies.RequireModerator)]
+        [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
         {
             if (!ModelState.IsValid)

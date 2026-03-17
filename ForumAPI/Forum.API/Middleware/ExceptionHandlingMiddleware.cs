@@ -12,6 +12,13 @@ namespace Forum.API.Middleware
             {
                 await next(context);
             }
+            catch (TokenException ex)
+            {
+                logger.LogError(ex, ex.Message);
+                context.Response.StatusCode = 401;
+
+                await context.Response.WriteAsync("You need to authenticate");
+            }
             catch (NotFoundException ex)
             {
                 logger.LogError(ex, ex.Message);

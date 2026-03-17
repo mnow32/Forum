@@ -1,9 +1,10 @@
 ﻿using Forum.API.Interfaces;
+using System.Security.Claims;
 
 namespace Forum.API.Authorization
 {
-    public interface IOperationAuthorizationService<T> where T : IOwnable
+    public interface IOperationAuthorizationService
     {
-        bool IsAuthorized(T item, string operation);
+        bool IsResourceOperationAuthorized<T>(T item, string operation, ClaimsPrincipal user) where T : IOwnable;
     }
 }
