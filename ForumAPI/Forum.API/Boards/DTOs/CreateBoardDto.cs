@@ -1,7 +1,6 @@
-﻿using Forum.API.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Forum.API.DTOs
+namespace Forum.API.Boards.DTOs
 {
     public class CreateBoardDto
     {

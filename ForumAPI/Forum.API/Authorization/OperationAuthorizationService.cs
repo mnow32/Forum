@@ -1,9 +1,6 @@
 ﻿using Forum.API.Authorization.Constants;
-using Forum.API.Entities;
 using Forum.API.Extensions;
-using Forum.API.ForumUsers;
 using Forum.API.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace Forum.API.Authorization

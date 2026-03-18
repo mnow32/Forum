@@ -1,6 +1,5 @@
 using Forum.API.Data;
 using Forum.API.Data.Repositories;
-using Forum.API.Entities;
 using Forum.API.Interfaces;
 using Forum.API.Seeding;
 using Forum.API.Services;
@@ -11,13 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Reflection;
 using System.Text;
-using System.Configuration;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Serilog;
 using Forum.API.Extensions;
 using Forum.API.Authorization;
-using Forum.API.ForumUsers;
 using Forum.API.Authorization.Constants;
+using Forum.API.ForumUsers;
 
 var builder = WebApplication.CreateBuilder(args);
 

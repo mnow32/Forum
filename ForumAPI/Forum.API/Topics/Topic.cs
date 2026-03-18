@@ -1,6 +1,9 @@
-﻿using Forum.API.Interfaces;
+﻿using Forum.API.Boards;
+using Forum.API.ForumMembers;
+using Forum.API.Interfaces;
+using Forum.API.Posts;
 
-namespace Forum.API.Entities
+namespace Forum.API.Topics
 {
     public class Topic : IOwnable
     {

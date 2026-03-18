@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Forum.API.Authorization.Constants;
-using Forum.API.DTOs;
-using Forum.API.Entities;
+using Forum.API.Boards.DTOs;
 using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,26 +11,25 @@ namespace Forum.API.Controllers
 {
     [Route("api/boards")]
     [ApiController]
-    public class BoardsController(IBoardsRepository boardsRepository, ILogger<BoardsController> logger) : ControllerBase
+    public class BoardsController(IBoardsRepository boardsRepository) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAllBoards()
+        public async Task<ActionResult<IEnumerable<BoardDto>>> GetAllBoards()
         {
-            var boards = await boardsRepository.GetAllBoardsAsync();
-            return Ok(boards);
+            var boardDtos = await boardsRepository.GetAllBoardsAsync();
+            return Ok(boardDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBoardById([FromRoute] int id)
+        public async Task<ActionResult<BoardDto>> GetBoardById([FromRoute] int id)
         {
-            logger.LogInformation("Getting board with id {@id}", id);
             var board = await boardsRepository.GetBoardByIdAsync(id);
             return Ok(board);
         }
 
         [HttpPost]
         [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
-        public async Task<IActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
+        public async Task<ActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
         {
             if (!ModelState.IsValid)
             {
@@ -43,7 +41,7 @@ namespace Forum.API.Controllers
 
         [HttpPatch("{id}")]
         [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
-        public async Task<IActionResult> UpdateBoard([FromRoute] int id, [FromBody] UpdateBoardDto boardDto)
+        public async Task<ActionResult> UpdateBoard([FromRoute] int id, [FromBody] UpdateBoardDto boardDto)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +53,7 @@ namespace Forum.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
-        public async Task<IActionResult> DeleteBoard([FromRoute] int id)
+        public async Task<ActionResult> DeleteBoard([FromRoute] int id)
         {
             await boardsRepository.DeleteBoardAsync(id);
             return NoContent();

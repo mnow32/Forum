@@ -1,4 +1,9 @@
-﻿using Forum.API.Entities;
+﻿using Forum.API.Boards;
+using Forum.API.ForumMembers;
+using Forum.API.ForumUsers;
+using Forum.API.Posts;
+using Forum.API.Replies;
+using Forum.API.Topics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

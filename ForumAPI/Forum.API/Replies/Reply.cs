@@ -1,21 +1,20 @@
-﻿using Forum.API.Interfaces;
+﻿using Forum.API.ForumMembers;
+using Forum.API.Interfaces;
+using Forum.API.Posts;
 
-namespace Forum.API.Entities
+namespace Forum.API.Replies
 {
-    public class Post : IOwnable
+    public class Reply : IOwnable
     {
         public int Id { get; set; }
         public required string Content { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
-
-        // navigation properties
-        public required int TopicId { get; set; }
-        public Topic Topic { get; set; } = null!;
-        public List<Reply> Replies { get; set; } = new();
+        // Navigation properties
+        public required int PostId { get; set; }
+        public Post Post { get; set; } = null!;
         public required string MemberId { get; set; }
         public ForumMember Member { get; set; } = null!;
-
     }
 }

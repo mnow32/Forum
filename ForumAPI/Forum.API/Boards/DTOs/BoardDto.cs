@@ -1,6 +1,6 @@
-﻿using Forum.API.Entities;
+﻿using Forum.API.Topics.DTOs;
 
-namespace Forum.API.DTOs
+namespace Forum.API.Boards.DTOs
 {
     public class BoardDto
     {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Forum.API.Entities;
+using Forum.API.Boards.DTOs;
 
-namespace Forum.API.DTOs
+namespace Forum.API.Boards
 {
     public class BoardsProfile : Profile
     {

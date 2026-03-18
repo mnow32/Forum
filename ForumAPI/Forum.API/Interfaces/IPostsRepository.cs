@@ -1,4 +1,4 @@
-﻿using Forum.API.Entities;
+﻿using Forum.API.Posts;
 
 namespace Forum.API.Interfaces
 {

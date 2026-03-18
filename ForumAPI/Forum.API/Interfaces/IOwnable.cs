@@ -1,6 +1,4 @@
-﻿using Forum.API.Entities;
-
-namespace Forum.API.Interfaces
+﻿namespace Forum.API.Interfaces
 {
     public interface IOwnable
     {

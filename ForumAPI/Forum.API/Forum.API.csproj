@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\ForumUser\" />
+    <Folder Include="ForumMembers\DTOs\" />
+    <Folder Include="Replies\DTOs\" />
   </ItemGroup>
 
 </Project>

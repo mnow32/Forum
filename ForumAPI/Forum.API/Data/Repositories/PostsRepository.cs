@@ -1,5 +1,5 @@
-﻿using Forum.API.Entities;
-using Forum.API.Interfaces;
+﻿using Forum.API.Interfaces;
+using Forum.API.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Data.Repositories

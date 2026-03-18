@@ -1,5 +1,5 @@
-﻿using Forum.API.DTOs;
-using Forum.API.Entities;
+﻿
+using Forum.API.Boards.DTOs;
 
 namespace Forum.API.Interfaces
 {

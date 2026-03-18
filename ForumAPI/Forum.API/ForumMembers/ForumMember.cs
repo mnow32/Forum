@@ -1,4 +1,9 @@
-﻿namespace Forum.API.Entities
+﻿using Forum.API.ForumUsers;
+using Forum.API.Posts;
+using Forum.API.Replies;
+using Forum.API.Topics;
+
+namespace Forum.API.ForumMembers
 {
     public class ForumMember
     {

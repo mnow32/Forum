@@ -24,7 +24,7 @@ namespace Forum.API.Middleware
                 logger.LogError(ex, ex.Message);
                 context.Response.StatusCode = 404;
 
-                await context.Response.WriteAsync(ex.Message);
+                await context.Response.WriteAsync("Couldn't find resource");
             }
             catch (Exception ex)
             {

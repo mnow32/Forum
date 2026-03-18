@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using Forum.API.DTOs;
-using Forum.API.Entities;
+using Forum.API.Boards;
+using Forum.API.Boards.DTOs;
+using Forum.API.Exceptions;
 using Forum.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +11,10 @@ namespace Forum.API.Data.Repositories
     {
         public async Task<IEnumerable<BoardDto>> GetAllBoardsAsync()
         {
-            var boards = await dbContext.Boards.ToListAsync();
+            var boards = await dbContext.Boards.AsNoTracking().ToListAsync();
             if (boards is null)
             {
-                //TODO: Add custom exception
-                throw new Exception();
+                throw new NotFoundException("Couldn't load boards");
             }
             var boardDtos = mapper.Map<IEnumerable<BoardDto>>(boards);
             return boardDtos;
@@ -24,11 +24,11 @@ namespace Forum.API.Data.Repositories
         {
             var board = await dbContext.Boards
                 .Include(b => b.Topics)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (board is null)
             {
-                //TODO: Add custom exception
-                throw new Exception();
+                throw new NotFoundException($"Read failed - couldn't find Board with id: {id}");
             }
             var boardDto = mapper.Map<BoardDto>(board);
             return boardDto;
@@ -37,7 +37,7 @@ namespace Forum.API.Data.Repositories
         public async Task<int> CreateBoardAsync(CreateBoardDto boardDto)
         {
             var newBoard = mapper.Map<Board>(boardDto);
-            dbContext.Boards.Add(newBoard);
+            var result = dbContext.Boards.Add(newBoard);
             await dbContext.SaveChangesAsync();
             return newBoard.Id;
         }
@@ -46,8 +46,7 @@ namespace Forum.API.Data.Repositories
             var board = await dbContext.Boards.FindAsync(id);
             if (board is null)
             {
-                //TODO: Add custom exception
-                throw new Exception();
+                throw new NotFoundException($"Update failed - couldn't find Board with id: {id}");
             }
             //TODO: Add logic for both boardDto properies being null
             mapper.Map(boardDto, board);
@@ -59,8 +58,7 @@ namespace Forum.API.Data.Repositories
             var board = await dbContext.Boards.FindAsync(id);
             if(board is null)
             {
-                //TODO: Add custom exception
-                throw new Exception();
+                throw new NotFoundException($"Delete failed - couldn't find Board with id: {id}");
             }
             dbContext.Boards.Remove(board);
             await dbContext.SaveChangesAsync();

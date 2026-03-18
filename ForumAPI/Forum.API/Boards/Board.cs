@@ -1,4 +1,6 @@
-﻿namespace Forum.API.Entities
+﻿using Forum.API.Topics;
+
+namespace Forum.API.Boards
 {
     public class Board
     {

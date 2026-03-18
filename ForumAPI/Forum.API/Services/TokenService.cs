@@ -1,4 +1,4 @@
-﻿using Forum.API.Entities;
+﻿using Forum.API.ForumUsers;
 using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
