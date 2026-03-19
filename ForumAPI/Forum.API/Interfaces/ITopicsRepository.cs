@@ -8,8 +8,8 @@ namespace Forum.API.Interfaces
     {
         Task<TopicDto> GetTopicByIdAsync(int id);
         Task<int> CreateTopicAsync(CreateTopicDto createTopicDto);
-        Task UpdateTopicAsync(int topicId, UpdateTopicDto updateTopicDto, ClaimsPrincipal user);
-        Task DeleteTopicAsync(int id, ClaimsPrincipal user);
+        Task UpdateTopicAsync(int topicId, UpdateTopicDto updateTopicDto);
+        Task DeleteTopicAsync(int id);
 
     }
 }

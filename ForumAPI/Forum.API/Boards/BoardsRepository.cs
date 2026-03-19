@@ -1,21 +1,17 @@
 ﻿using AutoMapper;
-using Forum.API.Boards;
 using Forum.API.Boards.DTOs;
+using Forum.API.Data;
 using Forum.API.Exceptions;
 using Forum.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Data.Repositories
+namespace Forum.API.Boards
 {
     public class BoardsRepository(ForumDbContext dbContext, IMapper mapper) : IBoardsRepository
     {
         public async Task<IEnumerable<BoardDto>> GetAllBoardsAsync()
         {
             var boards = await dbContext.Boards.AsNoTracking().ToListAsync();
-            if (boards is null)
-            {
-                throw new NotFoundException("Couldn't load boards");
-            }
             var boardDtos = mapper.Map<IEnumerable<BoardDto>>(boards);
             return boardDtos;
         }
@@ -43,20 +39,19 @@ namespace Forum.API.Data.Repositories
         }
         public async Task UpdateBoardAsync(int id, UpdateBoardDto boardDto)
         {
-            var board = await dbContext.Boards.FindAsync(id);
+            var board = await dbContext.Boards.FirstOrDefaultAsync(b => b.Id == id);
             if (board is null)
             {
                 throw new NotFoundException($"Update failed - couldn't find Board with id: {id}");
-            }
-            //TODO: Add logic for both boardDto properies being null
+            }            
             mapper.Map(boardDto, board);
             await dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteBoardAsync(int id)
         {
-            var board = await dbContext.Boards.FindAsync(id);
-            if(board is null)
+            var board = await dbContext.Boards.FirstOrDefaultAsync(b => b.Id == id);
+            if (board is null)
             {
                 throw new NotFoundException($"Delete failed - couldn't find Board with id: {id}");
             }

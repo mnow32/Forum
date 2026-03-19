@@ -5,6 +5,6 @@ namespace Forum.API.Authorization
 {
     public interface IOperationAuthorizationService
     {
-        bool IsResourceOperationAuthorized<T>(T item, string operation, ClaimsPrincipal user) where T : IOwnable;
+        Task<bool> IsResourceOperationAuthorizedAsync<T>(T item, string operation) where T : IOwnable;
     }
 }

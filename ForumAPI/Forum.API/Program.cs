@@ -1,5 +1,4 @@
 using Forum.API.Data;
-using Forum.API.Data.Repositories;
 using Forum.API.Interfaces;
 using Forum.API.Seeding;
 using Forum.API.Services;
@@ -16,6 +15,9 @@ using Forum.API.Extensions;
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
 using Forum.API.ForumUsers;
+using Forum.API.Topics;
+using Forum.API.Posts;
+using Forum.API.Boards;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IOperationAuthorizationService, OperationAuthorizationService>();
 builder.Services.AddScoped<IForumSeeder, ForumSeeder>();
 builder.Services.AddAutoMapper(cfg =>

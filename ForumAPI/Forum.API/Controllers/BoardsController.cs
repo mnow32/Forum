@@ -41,13 +41,18 @@ namespace Forum.API.Controllers
 
         [HttpPatch("{id}")]
         [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
-        public async Task<ActionResult> UpdateBoard([FromRoute] int id, [FromBody] UpdateBoardDto boardDto)
+        public async Task<ActionResult> UpdateBoard([FromRoute] int id, [FromBody] UpdateBoardDto updateBoardDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await boardsRepository.UpdateBoardAsync(id, boardDto);
+            if(updateBoardDto.Name is null && updateBoardDto.Description is null)
+            {
+                ModelState.AddModelError("emptyRequest", "One of the fields must be filled");
+                return BadRequest(ModelState);
+            }
+            await boardsRepository.UpdateBoardAsync(id, updateBoardDto);
             return NoContent();
         }
 

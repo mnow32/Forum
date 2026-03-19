@@ -1,8 +1,8 @@
-﻿using Forum.API.Interfaces;
-using Forum.API.Posts;
+﻿using Forum.API.Data;
+using Forum.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Data.Repositories
+namespace Forum.API.Posts
 {
     public class PostsRepository(ForumDbContext dbContext) : IPostsRepository
     {

@@ -1,4 +1,5 @@
-﻿using Forum.API.Extensions;
+﻿using Forum.API.Boards.DTOs;
+using Forum.API.Extensions;
 using Forum.API.Interfaces;
 using Forum.API.Topics.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +42,12 @@ namespace Forum.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await topicsRepository.UpdateTopicAsync(topicId, updateTopicDto, User);
+            if (updateTopicDto.Title is null && updateTopicDto.Description is null)
+            {
+                ModelState.AddModelError("emptyRequest", "One of the fields must be filled");
+                return BadRequest(ModelState);
+            }
+            await topicsRepository.UpdateTopicAsync(topicId, updateTopicDto);
             return NoContent();
         }
 
@@ -49,7 +55,7 @@ namespace Forum.API.Controllers
         [Authorize]
         public async Task<ActionResult> DeleteTopic([FromRoute] int topicId)
         {
-            await topicsRepository.DeleteTopicAsync(topicId, User);
+            await topicsRepository.DeleteTopicAsync(topicId);
             return NoContent();
         }
 
