@@ -1,9 +1,12 @@
 ﻿using Forum.API.Posts;
+using Forum.API.Posts.DTOs;
 
 namespace Forum.API.Interfaces
 {
     public interface IPostsRepository
     {
-        Task<IEnumerable<Post>> GetAllPostsByTopicIdAsync(int topicId);
+        Task<PostDto> GetPostByIdAsync(int id);
+        Task<int> CreatePostAsync(CreatePostDto createPostDto);
+        Task DeletePostAsync(int postId);
     }
 }

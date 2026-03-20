@@ -43,7 +43,7 @@ namespace Forum.API.Topics
             bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(newTopic, ResourceOperations.Create);
             if (!isAuthorized)
             {
-                throw new ForbiddenException("User doesn't have permission to create Topic");
+                throw new ForbiddenException("Create failed - User doesn't have permission to create Topic");
             }
 
             dbContext.Topics.Add(newTopic);
@@ -53,7 +53,7 @@ namespace Forum.API.Topics
 
         public async Task UpdateTopicAsync(int topicId, UpdateTopicDto updateTopicDto)
         {
-            var topic = await dbContext.Topics.FindAsync(topicId);
+            var topic = await dbContext.Topics.FirstOrDefaultAsync(t => t.Id == topicId);
             if (topic is null)
             {
                 throw new NotFoundException($"Update failed - couldn't find Topic with id: {topicId}");
@@ -61,7 +61,7 @@ namespace Forum.API.Topics
             bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(topic, ResourceOperations.Delete);
             if (!isAuthorized)
             {
-                throw new ForbiddenException("User doesn't have permission to update Topic");
+                throw new ForbiddenException("Update failed - User doesn't have permission to update Topic");
             }            
             var newTopic = mapper.Map(updateTopicDto, topic);
             await dbContext.SaveChangesAsync();
@@ -70,7 +70,7 @@ namespace Forum.API.Topics
 
         public async Task DeleteTopicAsync(int topicId)
         {
-            var topic = await dbContext.Topics.FindAsync(topicId);
+            var topic = await dbContext.Topics.FirstOrDefaultAsync(t => t.Id == topicId);
             if(topic is null)
             {
                 throw new NotFoundException($"Delete failed - couldn't find Topic with id: {topicId}");
@@ -78,7 +78,7 @@ namespace Forum.API.Topics
             bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(topic, ResourceOperations.Delete);
             if (!isAuthorized)
             {
-                throw new ForbiddenException("User doesn't have permission to delete Topic");
+                throw new ForbiddenException("Delete failed - User doesn't have permission to delete Topic");
             }
             dbContext.Topics.Remove(topic);
             await dbContext.SaveChangesAsync();
