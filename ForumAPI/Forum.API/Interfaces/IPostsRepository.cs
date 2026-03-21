@@ -7,6 +7,7 @@ namespace Forum.API.Interfaces
     {
         Task<PostDto> GetPostByIdAsync(int id);
         Task<int> CreatePostAsync(CreatePostDto createPostDto);
+        Task UpdatePostAsync(int postId, UpdatePostDto updatePostDto);
         Task DeletePostAsync(int postId);
     }
 }

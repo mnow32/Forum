@@ -18,6 +18,7 @@ using Forum.API.ForumUsers;
 using Forum.API.Topics;
 using Forum.API.Posts;
 using Forum.API.Boards;
+using Forum.API.Replies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(co
 builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
+builder.Services.AddScoped<IRepliesRepository, RepliesRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IOperationAuthorizationService, OperationAuthorizationService>();

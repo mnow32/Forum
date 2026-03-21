@@ -58,7 +58,7 @@ namespace Forum.API.Topics
             {
                 throw new NotFoundException($"Update failed - couldn't find Topic with id: {topicId}");
             }
-            bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(topic, ResourceOperations.Delete);
+            bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(topic, ResourceOperations.Update);
             if (!isAuthorized)
             {
                 throw new ForbiddenException("Update failed - User doesn't have permission to update Topic");

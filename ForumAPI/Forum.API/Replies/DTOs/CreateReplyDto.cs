@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Forum.API.Posts.DTOs
+namespace Forum.API.Replies.DTOs
 {
-    public class UpdatePostDto
+    public class CreateReplyDto
     {
+        public int? PostId { get; set; }
+        public string? MemberId { get; set; }
+
         [StringLength(30000, MinimumLength = 5)]
         public required string Content { get; set; }
     }

@@ -33,6 +33,18 @@ namespace Forum.API.Controllers
             return CreatedAtAction(nameof(GetPostById), new { id }, null);
         }
 
+        [HttpPatch("api/posts/{id}")]
+        [Authorize]
+        public async Task<ActionResult> UpdatePost([FromRoute] int postId, [FromBody] UpdatePostDto updatePostDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await postsRepository.UpdatePostAsync(postId, updatePostDto);
+            return NoContent();
+        }
+
         [HttpDelete("api/posts/{id}")]
         [Authorize]
         public async Task<ActionResult> DeletePost([FromRoute] int postId)

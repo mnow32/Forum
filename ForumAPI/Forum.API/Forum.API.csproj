@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="ForumMembers\DTOs\" />
-    <Folder Include="Replies\DTOs\" />
   </ItemGroup>
 
 </Project>

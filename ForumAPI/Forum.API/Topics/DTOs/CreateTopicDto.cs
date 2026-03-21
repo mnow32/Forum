@@ -4,7 +4,7 @@ namespace Forum.API.Topics.DTOs
 {
     public class CreateTopicDto
     {
-        public int BoardId { get; set; }
+        public int? BoardId { get; set; }
         public string? MemberId { get; set; }
 
         [StringLength(250, MinimumLength = 5)]

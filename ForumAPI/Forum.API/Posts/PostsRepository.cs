@@ -5,6 +5,7 @@ using Forum.API.Data;
 using Forum.API.Exceptions;
 using Forum.API.Interfaces;
 using Forum.API.Posts.DTOs;
+using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Posts
@@ -44,6 +45,22 @@ namespace Forum.API.Posts
             await dbContext.SaveChangesAsync();
 
             return newPost.Id;
+        }
+
+        public async Task UpdatePostAsync(int postId, UpdatePostDto updatePostDto)
+        {
+            var post = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            if (post is null)
+            {
+                throw new NotFoundException($"Update failed - couldn't find Post with id: {postId}");
+            }
+            bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(post, ResourceOperations.Update);
+            if (!isAuthorized)
+            {
+                throw new ForbiddenException("Update failed - User doesn't have permission to update Topic");
+            }
+            var newTopic = mapper.Map(updatePostDto, post);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task DeletePostAsync(int postId)

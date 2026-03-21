@@ -1,0 +1,83 @@
+﻿using AutoMapper;
+using Forum.API.Authorization;
+using Forum.API.Authorization.Constants;
+using Forum.API.Data;
+using Forum.API.Exceptions;
+using Forum.API.Posts;
+using Forum.API.Posts.DTOs;
+using Forum.API.Replies.DTOs;
+using Microsoft.EntityFrameworkCore;
+
+namespace Forum.API.Replies
+{
+    public class RepliesRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService) : IRepliesRepository
+    {
+        public async Task<IEnumerable<ReplyDto>> GetRepliesByPostIdAsync(int postId)
+        {
+            var post = await dbContext.Posts
+                .Include(p => p.Replies)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == postId);
+            if (post is null)
+            {
+                throw new NotFoundException($"Read failed - couldn't find Post with id: {postId} to read Replies");
+            }
+
+            IEnumerable<ReplyDto> replyDtos = mapper.Map<IEnumerable<ReplyDto>>(post.Replies);
+
+            return replyDtos;
+        }
+
+        public async Task<int> CreateReplyAsync(CreateReplyDto createReplyDto)
+        {
+            var post = dbContext.Posts.FirstOrDefaultAsync(p => p.Id == createReplyDto.PostId);
+            if (post is null)
+            {
+                throw new NotFoundException($"Create failed - couldn't find Post with id: {createReplyDto.PostId} to create Reply");
+            }
+            Reply newReply = mapper.Map<Reply>(createReplyDto);
+            bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(newReply, ResourceOperations.Create);
+            if (!isAuthorized)
+            {
+                throw new ForbiddenException("Create failed - User doesn't have permission to create Post");
+            }
+
+            dbContext.Replies.Add(newReply);
+            await dbContext.SaveChangesAsync();
+
+            return newReply.Id;
+        }
+
+        public async Task UpdateReplyAsync(int replyId, UpdateReplyDto updateReplyDto)
+        {
+            var reply = await dbContext.Replies.FirstOrDefaultAsync(r => r.Id == replyId);
+            if (reply is null)
+            {
+                throw new NotFoundException($"Update failed - couldn't find Reply with id: {replyId}");
+            }
+            bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(reply, ResourceOperations.Update);
+            if (!isAuthorized)
+            {
+                throw new ForbiddenException("Update failed - User doesn't have permission to update Reply");
+            }
+            var newReply = mapper.Map(updateReplyDto, reply);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteReplyAsync(int replyId)
+        {
+            var reply = await dbContext.Replies.FirstOrDefaultAsync(r => r.Id == replyId);
+            if (reply is null)
+            {
+                throw new NotFoundException($"Delete failed - couldn't find Reply with id: {replyId}");
+            }
+            bool isAuthorized = await authorizationService.IsResourceOperationAuthorizedAsync(reply, ResourceOperations.Delete);
+            if (!isAuthorized)
+            {
+                throw new ForbiddenException("Delete failed - User doesn't have permission to delete Post");
+            }
+            dbContext.Replies.Remove(reply);
+            await dbContext.SaveChangesAsync();
+        }
+    }
+}
