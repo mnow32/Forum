@@ -10,7 +10,7 @@ namespace Forum.API.Middleware
         {
             try
             {
-                await next(context);
+                await next.Invoke(context);
             }
             catch (TokenException ex)
             {
@@ -21,7 +21,7 @@ namespace Forum.API.Middleware
             }
             catch (NotFoundException ex)
             {
-                logger.LogError(ex, ex.Message);
+                logger.LogError(ex.Message);
                 context.Response.StatusCode = 404;
 
                 await context.Response.WriteAsync("Couldn't find resource");

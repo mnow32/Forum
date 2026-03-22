@@ -3,8 +3,6 @@ using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
 using Forum.API.Data;
 using Forum.API.Exceptions;
-using Forum.API.Posts;
-using Forum.API.Posts.DTOs;
 using Forum.API.Replies.DTOs;
 using Microsoft.EntityFrameworkCore;
 

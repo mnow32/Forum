@@ -8,8 +8,9 @@ namespace Forum.API.Replies
     {
         public int Id { get; set; }
         public required string Content { get; set; }
+        public required string MemberName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public required int PostId { get; set; }

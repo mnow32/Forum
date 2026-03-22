@@ -12,11 +12,11 @@ namespace Forum.API.Extensions
             return userId;
         }
 
-        public static IEnumerable<string> GetMemberRoles(this ClaimsPrincipal user)
+        public static string GetMemberName(this ClaimsPrincipal user)
         {
-            IEnumerable<string> userRoles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(r => r.Value)
-                ?? throw new TokenException("Cannot retrieve Member roles from the token");
-            return userRoles;
+            string userName = user.FindFirst(ClaimTypes.Name)!.Value
+                ?? throw new TokenException("Cannot retrieve MemberName from the token");
+            return userName;
         }
     }
 }

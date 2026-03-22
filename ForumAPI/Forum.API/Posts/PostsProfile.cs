@@ -9,7 +9,6 @@ namespace Forum.API.Posts
         {
             CreateMap<CreatePostDto, Post>();
             CreateMap<UpdatePostDto, Post>()
-                .ForMember(dest => dest.Content, options => options.DoNotAllowNull())
                 .ForMember(dest => dest.UpdatedAt, options => options.MapFrom(src => DateTime.UtcNow));
             CreateMap<Post, PostDto>();
 

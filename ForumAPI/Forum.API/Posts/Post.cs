@@ -9,8 +9,9 @@ namespace Forum.API.Posts
     {
         public int Id { get; set; }
         public required string Content { get; set; }
+        public required string MemberName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 
         // navigation properties

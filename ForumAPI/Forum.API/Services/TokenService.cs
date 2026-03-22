@@ -32,6 +32,7 @@ namespace Forum.API.Services
             var claims = new List<Claim>()
             {
                 new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Name, user.DisplayName),
                 new(ClaimTypes.Email, user.Email!),
             };
 

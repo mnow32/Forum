@@ -1,6 +1,5 @@
 ﻿using Forum.API.Authorization.Constants;
 using Forum.API.Data;
-using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Forum.API.Seeding

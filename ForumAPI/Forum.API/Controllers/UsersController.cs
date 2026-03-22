@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Forum.API.Controllers
 {
@@ -66,14 +67,15 @@ namespace Forum.API.Controllers
         [HttpPost("refresh-token")]
         public async Task<ActionResult<ForumUserDto>> RefreshToken()
         {
-            var token = Request.Cookies["refreshToken"];
-            if(token is null)
+            var refreshToken = Request.Cookies["refreshToken"];
+            if(refreshToken is null)
             {
                 return Unauthorized(); 
             }
 
-            string tokenHash = tokenService.HashRefreshToken(token);
-            var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshTokenHash == tokenHash && u.RefreshTokenExpiry < DateTime.UtcNow);
+            string refreshTokenHash = tokenService.HashRefreshToken(refreshToken);
+            var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshTokenHash == refreshTokenHash && u.RefreshTokenExpiry > DateTime.UtcNow);
+            
 
             if(user is null)
             {

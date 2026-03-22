@@ -30,6 +30,7 @@ namespace Forum.API.Controllers
             }
             createTopicDto.BoardId = boardId;
             createTopicDto.MemberId = User.GetMemberId();
+            createTopicDto.MemberName = User.GetMemberName();
             int id = await topicsRepository.CreateTopicAsync(createTopicDto);
             return CreatedAtAction(nameof(GetTopicById), new { id }, null);
         }

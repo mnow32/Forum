@@ -19,10 +19,11 @@ using Forum.API.Topics;
 using Forum.API.Posts;
 using Forum.API.Boards;
 using Forum.API.Replies;
+using Forum.API.ForumMembers;
+using Forum.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//TODO: Throw custom exceptions
 var connectionString = builder.Configuration["ConnectionStrings:ForumDbConnection"] 
     ?? throw new InvalidConfigurationException("Could not retrieve database connection string from configuration file");
 var automapperLicenseKey = builder.Configuration["Forum:AutomapperLicenseKey"] 
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IRepliesRepository, RepliesRepository>();
+builder.Services.AddScoped<IForumMembersRepository, ForumMembersRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IOperationAuthorizationService, OperationAuthorizationService>();
@@ -83,13 +85,14 @@ builder.Host.UseSerilog((context, configuration) =>
 
 var app = builder.Build();
 
+app.UseExceptionHandling();
+
 using var scope = app.Services.CreateScope();
 {
     var seeder = scope.ServiceProvider.GetRequiredService<IForumSeeder>();
     await seeder.SeedAsync();
 }
 
-app.UseExceptionHandling();
 
 app.UseSerilogRequestLogging();
 

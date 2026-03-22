@@ -10,7 +10,8 @@ namespace Forum.API.Topics
             CreateMap<CreateTopicDto, Topic>();
             CreateMap<UpdateTopicDto, Topic>()
                 .ForMember(dest => dest.Title, options => options.Condition(src => src.Title is not null))
-                .ForMember(dest => dest.Description, options => options.Condition(src => src.Description is not null)); ;
+                .ForMember(dest => dest.Description, options => options.Condition(src => src.Description is not null))
+                .ForMember(dest => dest.UpdatedAt, options => options.MapFrom(scr => DateTime.UtcNow)); ; 
             CreateMap<Topic, TopicDto>();
         }
     }

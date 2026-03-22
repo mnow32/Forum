@@ -29,6 +29,7 @@ namespace Forum.API.Controllers
             }
             createPostDto.TopicId = topicId;
             createPostDto.MemberId = User.GetMemberId();
+            createPostDto.MemberName = User.GetMemberName();
             int id = await postsRepository.CreatePostAsync(createPostDto);
             return CreatedAtAction(nameof(GetPostById), new { id }, null);
         }

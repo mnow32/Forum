@@ -1,13 +1,14 @@
-﻿using Forum.API.Replies;
+﻿using Forum.API.Replies.DTOs;
 
 namespace Forum.API.Posts.DTOs
 {
     public class PostDto
     {
-        public required int Id { get; set; }
-        public required string Content { get; set; }
+        public int Id { get; set; }
+        public string Content { get; set; } = string.Empty;
+        public string MemberName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<Reply> Replies { get; set; } = new();
+        public List<ReplyDto> Replies { get; set; } = new();
     }
 }

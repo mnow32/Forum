@@ -4,8 +4,9 @@ namespace Forum.API.Posts.DTOs
 {
     public class CreatePostDto
     {
-        public int? TopicId { get; set; }
-        public string? MemberId { get; set; }
+        public int TopicId { get; set; }
+        public string MemberId { get; set; } = string.Empty;
+        public string MemberName { get; set; } = string.Empty;
 
         [StringLength(30000, MinimumLength = 5)]
         public required string Content { get; set; }

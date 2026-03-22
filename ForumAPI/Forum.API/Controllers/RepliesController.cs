@@ -1,11 +1,7 @@
 ﻿using Forum.API.Extensions;
-using Forum.API.Interfaces;
-using Forum.API.Posts;
-using Forum.API.Posts.DTOs;
 using Forum.API.Replies;
 using Forum.API.Replies.DTOs;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Controllers
@@ -30,6 +26,7 @@ namespace Forum.API.Controllers
             }
             createReplyDto.PostId = postId;
             createReplyDto.MemberId = User.GetMemberId();
+            createReplyDto.MemberName = User.GetMemberName();
             int id = await repliesRepository.CreateReplyAsync(createReplyDto);
             return Created();
         }
