@@ -20,7 +20,7 @@ namespace Forum.API.ForumMembers
             }
 
             var result = await PaginationHelper.CreatePagingAsync(query, memberParams.PageNumber, memberParams.PageSize);
-
+            
             //var memberDtos = mapper.Map<IEnumerable<ForumMemberDto>>(result.Items);
             return new PaginationResult<ForumMemberDto>
             {
