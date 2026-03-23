@@ -1,7 +1,6 @@
 ﻿using Forum.API.Authorization.Constants;
 using Forum.API.ForumUsers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +34,7 @@ namespace Forum.API.Controllers
 
         [HttpPost("api/admin/users/{userId}/assign-roles")]
         //[Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
-        public async Task<ActionResult> AddToRoles([FromRoute] string userId, [FromBody] List<string> newRoles)
+        public async Task<ActionResult<IEnumerable<string>>> AddToRoles([FromRoute] string userId, [FromBody] List<string> newRoles)
         {
             List<string> acceptedRoles = new()
             {
@@ -80,7 +79,7 @@ namespace Forum.API.Controllers
 
         [HttpPost("api/admin/users/{userId}/unassign-roles")]
         //[Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
-        public async Task<ActionResult<IEnumerable<object>>> RemoveFromRoles([FromRoute] string userId, [FromBody] List<string> rolesToRemove)
+        public async Task<ActionResult<IEnumerable<string>>> RemoveFromRoles([FromRoute] string userId, [FromBody] List<string> rolesToRemove)
         {
             List<string> acceptedRoles = new()
             {

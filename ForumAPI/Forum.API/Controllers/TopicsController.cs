@@ -1,11 +1,8 @@
-﻿using Forum.API.Boards.DTOs;
-using Forum.API.Extensions;
+﻿using Forum.API.Extensions;
 using Forum.API.Interfaces;
 using Forum.API.Topics.DTOs;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Concurrent;
 
 namespace Forum.API.Controllers
 {

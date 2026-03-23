@@ -3,11 +3,9 @@ using Forum.API.Authorization.Constants;
 using Forum.API.ForumUsers;
 using Forum.API.ForumUsers.DTOs;
 using Forum.API.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace Forum.API.Controllers
 {

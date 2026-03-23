@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-using Forum.API.Authorization.Constants;
+﻿using Forum.API.Authorization.Constants;
 using Forum.API.Boards.DTOs;
 using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Controllers
