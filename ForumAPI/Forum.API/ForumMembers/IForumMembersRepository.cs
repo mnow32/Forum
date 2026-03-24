@@ -6,7 +6,6 @@ namespace Forum.API.ForumMembers
 {
     public interface IForumMembersRepository
     {
-        //Task<IEnumerable<ForumMemberDto>> GetAllMembersAsync();
         Task<PaginationResult<ForumMemberDto>> GetMembersAsync(MemberParams memberParams);
     }
 }

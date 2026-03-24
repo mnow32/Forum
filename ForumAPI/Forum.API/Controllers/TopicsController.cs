@@ -1,5 +1,7 @@
 ﻿using Forum.API.Extensions;
-using Forum.API.Interfaces;
+using Forum.API.Pagination;
+using Forum.API.Pagination.Params;
+using Forum.API.Topics;
 using Forum.API.Topics.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,13 @@ namespace Forum.API.Controllers
         {
             TopicDto topicDto = await topicsRepository.GetTopicByIdAsync(id);
             return Ok(topicDto);
+        }
+
+        [HttpGet("api/boards/{id}/topics")]
+        public async Task<ActionResult<PaginationResult<TopicDto>>> GetTopicsForBoard([FromRoute] int boardId, [FromQuery] TopicParams topicParams)
+        {
+            var pagedResult = topicsRepository.GetBoardTopicsByIdAsync(boardId, topicParams);
+            return Ok(pagedResult);
         }
 
         [HttpPost("api/boards/{boardId}/topics")]

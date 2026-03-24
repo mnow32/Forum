@@ -6,7 +6,8 @@ using Forum.API.Data;
 using Forum.API.Exceptions;
 using Forum.API.Extensions;
 using Forum.API.ForumUsers;
-using Forum.API.Interfaces;
+using Forum.API.Pagination;
+using Forum.API.Pagination.Params;
 using Forum.API.Topics.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,32 @@ namespace Forum.API.Topics
 
             TopicDto topicDto = mapper.Map<TopicDto>(topic);
             return topicDto;
+        }
+
+        public async Task<PaginationResult<TopicDto>> GetBoardTopicsByIdAsync(int boardId, TopicParams topicParams)
+        {
+            var board = await dbContext.Boards.FirstOrDefaultAsync(b => b.Id == boardId);
+            if(board is null)
+            {
+                throw new NotFoundException($"Read failed - couldn't find Board with id: {boardId} to retrieve Topics");
+            }
+            dbContext.Entry(board).State = EntityState.Detached;
+
+            var query = dbContext.Topics.AsQueryable().AsNoTracking();
+            if(topicParams.Title.Length > 0)
+            {
+                query = query.Where(t => t.Title.Contains(topicParams.Title));
+            }
+            query = query.OrderBy(t => t.CreatedAt);
+
+            (PaginationMetadata metadata, List<Topic> topics) = await PaginationHelper.CreatePagingAsync(query, topicParams.PageNumber, topicParams.PageSize);
+
+            return new PaginationResult<TopicDto>()
+            {
+                Metadata = metadata,
+                Items = mapper.Map<List<TopicDto>>(topics)
+            };
+
         }
 
         public async Task<int> CreateTopicAsync(CreateTopicDto createTopicDto)

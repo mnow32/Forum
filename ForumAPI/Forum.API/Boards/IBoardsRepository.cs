@@ -1,11 +1,12 @@
-﻿
-using Forum.API.Boards.DTOs;
+﻿using Forum.API.Boards.DTOs;
+using Forum.API.Pagination;
+using Forum.API.Pagination.Params;
 
-namespace Forum.API.Interfaces
+namespace Forum.API.Boards
 {
     public interface IBoardsRepository
     {
-        Task<IEnumerable<BoardDto>> GetAllBoardsAsync();
+        Task<PaginationResult<BoardDto>> GetBoardsAsync(BoardParams boardParams);
         Task<BoardDto> GetBoardByIdAsync(int id);
         Task<int> CreateBoardAsync(CreateBoardDto boardDto);
         Task UpdateBoardAsync(int id, UpdateBoardDto boardDto);

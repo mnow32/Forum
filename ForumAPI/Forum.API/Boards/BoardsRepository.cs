@@ -2,24 +2,38 @@
 using Forum.API.Boards.DTOs;
 using Forum.API.Data;
 using Forum.API.Exceptions;
-using Forum.API.Interfaces;
+using Forum.API.Pagination;
+using Forum.API.Pagination.Params;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Boards
 {
     public class BoardsRepository(ForumDbContext dbContext, IMapper mapper) : IBoardsRepository
     {
-        public async Task<IEnumerable<BoardDto>> GetAllBoardsAsync()
+        public async Task<PaginationResult<BoardDto>> GetBoardsAsync(BoardParams boardParams)
         {
-            var boards = await dbContext.Boards.AsNoTracking().ToListAsync();
-            var boardDtos = mapper.Map<IEnumerable<BoardDto>>(boards);
-            return boardDtos;
+            var query = dbContext.Boards.AsQueryable().AsNoTracking();
+
+            if(boardParams.Name.Length > 0)
+            {
+                query = query.Where(b => b.Name.Contains(boardParams.Name));
+            }
+
+            var result = await PaginationHelper.CreatePagingAsync(query, boardParams.PageNumber, boardParams.PageSize);
+
+            return new PaginationResult<BoardDto>
+            {
+                Metadata = result.Metadata,
+                Items = mapper.Map<List<BoardDto>>(result.Items)
+            };
         }
 
         public async Task<BoardDto> GetBoardByIdAsync(int id)
         {
             var board = await dbContext.Boards
-                .Include(b => b.Topics)
+                .Include(
+                    b => b.Topics
+                        .OrderByDescending(t => t.CreatedAt))
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
             if (board is null)

@@ -1,7 +1,5 @@
 using Forum.API.Data;
-using Forum.API.Interfaces;
 using Forum.API.Seeding;
-using Forum.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +19,7 @@ using Forum.API.Boards;
 using Forum.API.Replies;
 using Forum.API.ForumMembers;
 using Forum.API.Middleware;
+using Forum.API.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 

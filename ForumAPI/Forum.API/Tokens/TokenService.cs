@@ -1,5 +1,4 @@
 ﻿using Forum.API.ForumUsers;
-using Forum.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Forum.API.Services
+namespace Forum.API.Tokens
 {
     public class TokenService(IConfiguration config, UserManager<ForumUser> userManager) : ITokenService
     {

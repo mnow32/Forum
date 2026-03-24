@@ -1,6 +1,8 @@
 ﻿using Forum.API.Authorization.Constants;
+using Forum.API.Boards;
 using Forum.API.Boards.DTOs;
-using Forum.API.Interfaces;
+using Forum.API.Pagination;
+using Forum.API.Pagination.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +13,10 @@ namespace Forum.API.Controllers
     public class BoardsController(IBoardsRepository boardsRepository) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BoardDto>>> GetAllBoards()
+        public async Task<ActionResult<PaginationResult<BoardDto>>> GetAllBoards([FromQuery] BoardParams boardParams)
         {
-            var boardDtos = await boardsRepository.GetAllBoardsAsync();
-            return Ok(boardDtos);
+            var pagedResult = await boardsRepository.GetBoardsAsync(boardParams);
+            return Ok(pagedResult);
         }
 
         [HttpGet("{id}")]

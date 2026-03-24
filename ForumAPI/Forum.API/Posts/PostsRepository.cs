@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
+using Forum.API.Boards;
 using Forum.API.Data;
 using Forum.API.Exceptions;
-using Forum.API.Interfaces;
+using Forum.API.Pagination;
+using Forum.API.Pagination.Params;
 using Forum.API.Posts.DTOs;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,31 @@ namespace Forum.API.Posts
 
             PostDto postDto = mapper.Map<PostDto>(post);
             return postDto;
+        }
+
+        public async Task<PaginationResult<PostDto>> GetTopicPostsByIdAsync(int topicId, PagingParams pagingParams)
+        {
+            var topic = dbContext.Topics.FirstOrDefaultAsync(p => p.Id == topicId);
+            if(topic is null)
+            {
+                throw new NotFoundException($"Read failed - couldn't find Topic with id: {topicId} to retrieve Posts");
+            }
+            dbContext.Entry(topic).State = EntityState.Detached;
+
+            var query = dbContext.Posts
+                .AsQueryable()
+                .OrderBy(p => p.CreatedAt)
+                .Include(p => p.Replies
+                    .OrderBy(r => r.CreatedAt))
+                .AsNoTracking();
+
+            (PaginationMetadata metadata, List<Post> posts) = await PaginationHelper.CreatePagingAsync(query, pagingParams.PageNumber, pagingParams.PageSize);
+
+            return new PaginationResult<PostDto>
+            {
+                Metadata = metadata,
+                Items = mapper.Map<List<PostDto>>(posts)
+            };
         }
 
         public async Task<int> CreatePostAsync(CreatePostDto createPostDto)
