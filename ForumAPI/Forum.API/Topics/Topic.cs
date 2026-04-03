@@ -1,6 +1,7 @@
 ﻿using Forum.API.Boards;
 using Forum.API.ForumMembers;
 using Forum.API.Interfaces;
+using Forum.API.Photos.Entities;
 using Forum.API.Posts;
 
 namespace Forum.API.Topics
@@ -12,7 +13,7 @@ namespace Forum.API.Topics
         public required string Description { get; set; }
         public required string MemberName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
 
 
         // navigation properties
@@ -21,6 +22,7 @@ namespace Forum.API.Topics
         public List<Post> Posts { get; set; } = new List<Post>();
         public required string MemberId { get; set; }
         public ForumMember Member { get; set; } = null!;
+        public List<TopicPhoto> Photos { get; set; } = new();
 
 
     }

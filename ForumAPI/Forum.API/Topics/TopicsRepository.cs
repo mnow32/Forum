@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
-using Forum.API.Boards;
 using Forum.API.Data;
 using Forum.API.Exceptions;
-using Forum.API.Extensions;
-using Forum.API.ForumUsers;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Forum.API.Topics.DTOs;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Forum.API.Topics
 {
@@ -90,7 +85,7 @@ namespace Forum.API.Topics
             {
                 throw new ForbiddenException("Update failed - User doesn't have permission to update Topic");
             }            
-            var newTopic = mapper.Map(updateTopicDto, topic);
+            mapper.Map(updateTopicDto, topic);
             await dbContext.SaveChangesAsync();
 
         }

@@ -6,32 +6,19 @@ using Forum.API.Data;
 using Forum.API.Exceptions;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
+using Forum.API.Photos;
+using Forum.API.Photos.Entities;
 using Forum.API.Posts.DTOs;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Posts
 {
-    public class PostsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService) : IPostsRepository
+    public class PostsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : IPostsRepository
     {
-        public async Task<PostDto> GetPostByIdAsync(int id)
-        {
-            var post = await dbContext.Posts
-                .Include(p => p.Replies)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == id);
-            if(post is null)
-            {
-                throw new NotFoundException($"Read failed - couldn't find Post with id: {id}");
-            }
-
-            PostDto postDto = mapper.Map<PostDto>(post);
-            return postDto;
-        }
-
         public async Task<PaginationResult<PostDto>> GetTopicPostsByIdAsync(int topicId, PagingParams pagingParams)
         {
-            var topic = dbContext.Topics.FirstOrDefaultAsync(p => p.Id == topicId);
+            var topic = await dbContext.Topics.FirstOrDefaultAsync(p => p.Id == topicId);
             if(topic is null)
             {
                 throw new NotFoundException($"Read failed - couldn't find Topic with id: {topicId} to retrieve Posts");
@@ -43,6 +30,7 @@ namespace Forum.API.Posts
                 .OrderBy(p => p.CreatedAt)
                 .Include(p => p.Replies
                     .OrderBy(r => r.CreatedAt))
+                .Include(p => p.Photos)
                 .AsNoTracking();
 
             (PaginationMetadata metadata, List<Post> posts) = await PaginationHelper.CreatePagingAsync(query, pagingParams.PageNumber, pagingParams.PageSize);
@@ -56,7 +44,7 @@ namespace Forum.API.Posts
 
         public async Task<int> CreatePostAsync(CreatePostDto createPostDto)
         {
-            var topic = dbContext.Topics.FirstOrDefaultAsync(t => t.Id == createPostDto.TopicId);
+            var topic = await dbContext.Topics.FirstOrDefaultAsync(t => t.Id == createPostDto.TopicId);
             if(topic is null)
             {
                 throw new NotFoundException($"Create failed - couldn't find Topic with id: {createPostDto.TopicId} to create Post");
@@ -67,7 +55,25 @@ namespace Forum.API.Posts
             {
                 throw new ForbiddenException("Create failed - User doesn't have permission to create Post");
             }
-
+            if(createPostDto.Photos is not null)
+            {
+                var uploadResults = await photoService.BulkUploadContentPhotosAsync(createPostDto.Photos);
+                foreach (var result in uploadResults)
+                {
+                    if(result.Error is not null)
+                    {
+                        throw new CloudinaryException(result.Error.Message);
+                    }
+                    else
+                    {
+                        newPost.Photos.Add(new PostPhoto() 
+                        { 
+                            PublicId = result.PublicId, 
+                            Url = result.SecureUrl.AbsoluteUri 
+                        });
+                    }
+                }
+            }
             dbContext.Posts.Add(newPost);
             await dbContext.SaveChangesAsync();
 

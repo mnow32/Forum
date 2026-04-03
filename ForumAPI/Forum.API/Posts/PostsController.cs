@@ -1,34 +1,26 @@
-﻿using Forum.API.Boards;
-using Forum.API.Extensions;
+﻿using Forum.API.Authentication;
+using Forum.API.Boards;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
-using Forum.API.Posts;
 using Forum.API.Posts.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Posts
 {
     [ApiController]
     public class PostsController(IPostsRepository postsRepository) : ControllerBase
     {
-        [HttpGet("api/posts/{id}")]
-        public async Task<ActionResult<PostDto>> GetPostById([FromRoute] int id)
-        {
-            PostDto postDto = await postsRepository.GetPostByIdAsync(id);
-            return Ok(postDto);
-        }
-
-        [HttpGet("api/topics/{id}/posts")]
+        [HttpGet("api/topics/{topicId}/posts")]
         public async Task<ActionResult<PaginationResult<PostDto>>> GetPostsForTopic([FromRoute] int topicId, [FromQuery] PagingParams pagingParams)
         {
-            var pagedResult = postsRepository.GetTopicPostsByIdAsync(topicId, pagingParams);
+            var pagedResult = await postsRepository.GetTopicPostsByIdAsync(topicId, pagingParams);
             return Ok(pagedResult);
         }
 
-        [HttpPost("api/topics/{id}/posts")]
+        [HttpPost("api/topics/{topicId}/posts")]
         [Authorize]
-        public async Task<ActionResult> CreatePost([FromRoute] int topicId, [FromBody] CreatePostDto createPostDto)
+        public async Task<ActionResult> CreatePost([FromRoute] int topicId, [FromForm] CreatePostDto createPostDto)
         {
             if (!ModelState.IsValid)
             {
@@ -38,10 +30,10 @@ namespace Forum.API.Controllers
             createPostDto.MemberId = User.GetMemberId();
             createPostDto.MemberName = User.GetMemberName();
             int id = await postsRepository.CreatePostAsync(createPostDto);
-            return CreatedAtAction(nameof(GetPostById), new { id }, null);
+            return CreatedAtAction(nameof(GetPostsForTopic), new { topicId }, null);
         }
 
-        [HttpPatch("api/posts/{id}")]
+        [HttpPatch("api/posts/{postId}")]
         [Authorize]
         public async Task<ActionResult> UpdatePost([FromRoute] int postId, [FromBody] UpdatePostDto updatePostDto)
         {
@@ -53,7 +45,7 @@ namespace Forum.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("api/posts/{id}")]
+        [HttpDelete("api/posts/{postId}")]
         [Authorize]
         public async Task<ActionResult> DeletePost([FromRoute] int postId)
         {

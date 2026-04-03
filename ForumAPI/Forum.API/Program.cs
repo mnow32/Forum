@@ -9,17 +9,17 @@ using System.Reflection;
 using System.Text;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Serilog;
-using Forum.API.Extensions;
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
-using Forum.API.ForumUsers;
 using Forum.API.Topics;
 using Forum.API.Posts;
 using Forum.API.Boards;
 using Forum.API.Replies;
 using Forum.API.ForumMembers;
-using Forum.API.Middleware;
-using Forum.API.Tokens;
+using Forum.API.Authentication.ForumUsers;
+using Forum.API.Authentication.Tokens;
+using Forum.API.Photos;
+using Forum.API.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +35,7 @@ var tokenKey = builder.Configuration["Forum:TokenKey"]
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Forum:CloudinarySettings"));
 builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString).EnableSensitiveDataLogging());
 builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicsRepository>();
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IRepliesRepository, RepliesRepository>();
 builder.Services.AddScoped<IForumMembersRepository, ForumMembersRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IOperationAuthorizationService, OperationAuthorizationService>();
 builder.Services.AddScoped<IForumSeeder, ForumSeeder>();
@@ -84,7 +86,7 @@ builder.Host.UseSerilog((context, configuration) =>
 
 var app = builder.Build();
 
-app.UseExceptionHandling();
+//app.UseExceptionHandling();
 
 using var scope = app.Services.CreateScope();
 {

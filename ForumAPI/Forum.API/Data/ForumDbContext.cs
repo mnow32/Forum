@@ -1,10 +1,10 @@
-﻿using Forum.API.Boards;
+﻿using Forum.API.Authentication.ForumUsers;
+using Forum.API.Boards;
 using Forum.API.ForumMembers;
-using Forum.API.ForumUsers;
+using Forum.API.Photos.Entities;
 using Forum.API.Posts;
 using Forum.API.Replies;
 using Forum.API.Topics;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +17,11 @@ namespace Forum.API.Data
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Reply> Replies { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<MemberPhoto> MemberPhotos { get; set; }
+        public DbSet<TopicPhoto> TopicPhotos { get; set; }
+        public DbSet<PostPhoto> PostPhotos { get; set; }
+        public DbSet<ReplyPhoto> ReplyPhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,10 +43,22 @@ namespace Forum.API.Data
                 eb.Property(t => t.CreatedAt).HasDefaultValueSql("getutcdate()");
             });
 
+            modelBuilder.Entity<Reply>(eb =>
+            {
+                eb.Property(r => r.CreatedAt).HasDefaultValueSql("getutcdate()");
+            });
+
             modelBuilder.Entity<ForumMember>()
                 .HasOne(fm => fm.User)
                 .WithOne(u => u.Member)
                 .HasForeignKey<ForumMember>(fm => fm.Id)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ForumMember>()
+                .HasOne(fm => fm.Photo)
+                .WithOne(mp  => mp.Member)
+                .HasForeignKey<MemberPhoto>(mp => mp.MemberId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -59,6 +76,13 @@ namespace Forum.API.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Reply>()
+                .HasMany(r => r.Photos)
+                .WithOne(rp => rp.Reply)
+                .HasForeignKey(rp => rp.ReplyId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Topic)
                 .WithMany(t => t.Posts)
@@ -73,6 +97,13 @@ namespace Forum.API.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Post>()
+                .HasMany(p => p.Photos)
+                .WithOne(pp => pp.Post)
+                .HasForeignKey(rp => rp.PostId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Topic>()
                 .HasOne(t => t.Board)
                 .WithMany(b => b.Topics)
@@ -84,6 +115,13 @@ namespace Forum.API.Data
                 .HasOne(t => t.Member)
                 .WithMany(m => m.Topics)
                 .HasForeignKey(t => t.MemberId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Topic>()
+                .HasMany(t => t.Photos)
+                .WithOne(tp => tp.Topic)
+                .HasForeignKey(tp => tp.TopicId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

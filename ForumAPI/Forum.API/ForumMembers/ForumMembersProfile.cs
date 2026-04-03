@@ -8,6 +8,8 @@ namespace Forum.API.ForumMembers
         public ForumMembersProfile()
         {
             CreateMap<ForumMember, ForumMemberDto>();
+            CreateMap<UpdateForumMemberDto, ForumMember>()
+                .ForMember(dest => dest.Photo, options => options.Ignore());
         }
     }
 }

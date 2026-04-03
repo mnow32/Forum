@@ -7,5 +7,6 @@ namespace Forum.API.ForumMembers
     public interface IForumMembersRepository
     {
         Task<PaginationResult<ForumMemberDto>> GetMembersAsync(MemberParams memberParams);
+        Task UpdateMemberAsync(UpdateForumMemberDto updateForumMemberDto);
     }
 }

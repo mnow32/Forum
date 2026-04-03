@@ -1,10 +1,9 @@
-﻿using Forum.API.Extensions;
-using Forum.API.Replies;
+﻿using Forum.API.Authentication;
 using Forum.API.Replies.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Replies
 {
     [ApiController]
     public class RepliesController(IRepliesRepository repliesRepository) : ControllerBase

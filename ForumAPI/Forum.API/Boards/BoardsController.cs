@@ -1,12 +1,11 @@
 ﻿using Forum.API.Authorization.Constants;
-using Forum.API.Boards;
 using Forum.API.Boards.DTOs;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Boards
 {
     [Route("api/boards")]
     [ApiController]

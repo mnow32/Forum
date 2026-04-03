@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
+using Forum.API.Authentication.ForumUsers.DTOs;
+using Forum.API.Authentication.Tokens;
 using Forum.API.Authorization.Constants;
-using Forum.API.ForumUsers;
-using Forum.API.ForumUsers.DTOs;
-using Forum.API.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Authentication.ForumUsers
 {
     [Route("api/users")]
     [ApiController]

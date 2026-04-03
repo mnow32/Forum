@@ -7,7 +7,8 @@ namespace Forum.API.Posts
     {
         public PostsProfile()
         {
-            CreateMap<CreatePostDto, Post>();
+            CreateMap<CreatePostDto, Post>()
+                .ForMember(dest => dest.Photos, options => options.Ignore()); 
             CreateMap<UpdatePostDto, Post>()
                 .ForMember(dest => dest.UpdatedAt, options => options.MapFrom(src => DateTime.UtcNow));
             CreateMap<Post, PostDto>();

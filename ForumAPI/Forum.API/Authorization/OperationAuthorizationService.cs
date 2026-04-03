@@ -1,7 +1,7 @@
-﻿using Forum.API.Authorization.Constants;
+﻿using Forum.API.Authentication;
+using Forum.API.Authorization.Constants;
 using Forum.API.Data;
 using Forum.API.Exceptions;
-using Forum.API.Extensions;
 using Forum.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;

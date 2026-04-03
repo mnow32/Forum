@@ -1,28 +1,27 @@
-﻿using Forum.API.Extensions;
+﻿using Forum.API.Authentication;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
-using Forum.API.Topics;
 using Forum.API.Topics.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Topics
 {
     [ApiController]
     public class TopicsController(ITopicsRepository topicsRepository) : ControllerBase
     {
         
-        [HttpGet("api/topics/{id}")]
-        public async Task<ActionResult<TopicDto>> GetTopicById([FromRoute] int id)
+        [HttpGet("api/topics/{topicId}")]
+        public async Task<ActionResult<TopicDto>> GetTopicById([FromRoute] int topicId)
         {
-            TopicDto topicDto = await topicsRepository.GetTopicByIdAsync(id);
+            TopicDto topicDto = await topicsRepository.GetTopicByIdAsync(topicId);
             return Ok(topicDto);
         }
 
-        [HttpGet("api/boards/{id}/topics")]
+        [HttpGet("api/boards/{boardId}/topics")]
         public async Task<ActionResult<PaginationResult<TopicDto>>> GetTopicsForBoard([FromRoute] int boardId, [FromQuery] TopicParams topicParams)
         {
-            var pagedResult = topicsRepository.GetBoardTopicsByIdAsync(boardId, topicParams);
+            var pagedResult = await topicsRepository.GetBoardTopicsByIdAsync(boardId, topicParams);
             return Ok(pagedResult);
         }
 
@@ -41,7 +40,7 @@ namespace Forum.API.Controllers
             return CreatedAtAction(nameof(GetTopicById), new { id }, null);
         }
 
-        [HttpPatch("api/topics/{id}")]
+        [HttpPatch("api/topics/{topicId}")]
         [Authorize]
         public async Task<ActionResult> UpdateTopic([FromRoute] int topicId, [FromBody] UpdateTopicDto updateTopicDto)
         {
@@ -58,7 +57,7 @@ namespace Forum.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("api/topics/{id}")]
+        [HttpDelete("api/topics/{topicId}")]
         [Authorize]
         public async Task<ActionResult> DeleteTopic([FromRoute] int topicId)
         {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Forum.API.ForumUsers.DTOs
+namespace Forum.API.Authentication.ForumUsers.DTOs
 {
     public class LoginDto
     {

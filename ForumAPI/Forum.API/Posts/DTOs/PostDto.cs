@@ -1,4 +1,5 @@
-﻿using Forum.API.Replies.DTOs;
+﻿using Forum.API.Photos.Entities;
+using Forum.API.Replies.DTOs;
 
 namespace Forum.API.Posts.DTOs
 {
@@ -10,5 +11,6 @@ namespace Forum.API.Posts.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public List<ReplyDto> Replies { get; set; } = new();
+        public List<PostPhoto> Photos { get; set; } = new();
     }
 }

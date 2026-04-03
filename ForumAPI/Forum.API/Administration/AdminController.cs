@@ -1,35 +1,33 @@
-﻿using Forum.API.Authorization.Constants;
-using Forum.API.ForumUsers;
+﻿using Forum.API.Authentication.ForumUsers;
+using Forum.API.Authorization.Constants;
+using Forum.API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Administration
 {    
     [ApiController]
-    public class AdminController(UserManager<ForumUser> userManager) : ControllerBase
+    public class AdminController(UserManager<ForumUser> userManager, ForumDbContext dbContext) : ControllerBase
     {
         [HttpGet("api/admin/users")]
         //[Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
         public async Task<ActionResult<IEnumerable<object>>> GetUsersWithRoles()
         {
-            var users = await userManager.Users.ToListAsync();
-            var userList = new List<object>();
+            var usersWithRoles = await (from user in dbContext.Users
+                               select new
+                               {
+                                   Id = user.Id,
+                                   DisplayName = user.DisplayName,
+                                   Email = user.Email,
+                                   Roles = (from userRole in dbContext.UserRoles
+                                            join role in dbContext.Roles on userRole.RoleId equals role.Id
+                                            where userRole.UserId == user.Id
+                                            select role.Name).AsEnumerable()
+                               }).ToListAsync();
 
-            foreach (var user in users)
-            {
-                var roles = await userManager.GetRolesAsync(user);
-                userList.Add(new
-                {
-                    user.Id,
-                    user.DisplayName,
-                    user.Email,
-                    Roles = roles.ToList()
-                });
-            }
-
-            return Ok(userList);
+            return Ok(usersWithRoles);
         }
 
         [HttpPost("api/admin/users/{userId}/assign-roles")]
@@ -108,10 +106,6 @@ namespace Forum.API.Controllers
                 {
                     return BadRequest($"{role} is not an accepted value");
                 }
-                //if (!userRoles.Contains(role))
-                //{
-                //    return BadRequest($"User is not in role: {role}");
-                //}
             }
 
             var result = await userManager.RemoveFromRolesAsync(user, userRoles.Intersect(rolesToRemove));

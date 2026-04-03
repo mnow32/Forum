@@ -1,5 +1,6 @@
 ﻿using Forum.API.ForumMembers;
 using Forum.API.Interfaces;
+using Forum.API.Photos.Entities;
 using Forum.API.Replies;
 using Forum.API.Topics;
 
@@ -11,7 +12,7 @@ namespace Forum.API.Posts
         public required string Content { get; set; }
         public required string MemberName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; } 
 
 
         // navigation properties
@@ -20,6 +21,7 @@ namespace Forum.API.Posts
         public List<Reply> Replies { get; set; } = new();
         public required string MemberId { get; set; }
         public ForumMember Member { get; set; } = null!;
+        public List<PostPhoto> Photos { get; set; } = new();
 
     }
 }

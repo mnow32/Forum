@@ -1,17 +1,20 @@
 ﻿using AutoMapper;
 using Forum.API.Data;
+using Forum.API.Exceptions;
 using Forum.API.ForumMembers.DTOs;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
+using Forum.API.Photos;
+using Forum.API.Photos.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.ForumMembers
 {
-    public class ForumMembersRepository(ForumDbContext dbContext, IMapper mapper) : IForumMembersRepository
+    public class ForumMembersRepository(ForumDbContext dbContext, IPhotoService photoService, IMapper mapper) : IForumMembersRepository
     {
         public async Task<PaginationResult<ForumMemberDto>> GetMembersAsync(MemberParams memberParams)
         {
-            var query = dbContext.Members.AsQueryable().AsNoTracking(); 
+            var query = dbContext.Members.AsQueryable().Include(m => m.Photo).AsNoTracking(); 
 
             query = query.Where(m => m.Id != memberParams.CurrentMemberId);
             if(memberParams.DisplayName.Length > 0)
@@ -27,5 +30,33 @@ namespace Forum.API.ForumMembers
                 Items = mapper.Map<List<ForumMemberDto>>(result.Items)
             };
         }
+
+        public async Task UpdateMemberAsync(UpdateForumMemberDto updateForumMemberDto)
+        {
+            var member = await dbContext.Members.FirstOrDefaultAsync(m => m.Id == updateForumMemberDto.Id);
+            if(member is null)
+            {
+                throw new NotFoundException($"Update failed - couldn't find Memeber with id: {updateForumMemberDto.Id}");
+            }
+            //TODO: Check if member already has profile picture and delete it
+
+            mapper.Map(updateForumMemberDto, member);
+            if(updateForumMemberDto.Photo is not null)
+            {
+                var uploadResult = await photoService.UploadMemberPhotoAsync(updateForumMemberDto.Photo);
+                if(uploadResult.Error is not null)
+                {
+                    throw new CloudinaryException(uploadResult.Error.Message);
+                }
+                member.Photo = new MemberPhoto()
+                {
+                    Url = uploadResult.SecureUrl.AbsoluteUri,
+                    PublicId = uploadResult.PublicId,
+                };
+            }
+            await dbContext.SaveChangesAsync();
+
+        }
+
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Forum.API.Authentication.ForumUsers.DTOs;
 using Forum.API.ForumMembers;
-using Forum.API.ForumUsers.DTOs;
 
-namespace Forum.API.ForumUsers
+namespace Forum.API.Authentication.ForumUsers
 {
     public class ForumUserProfile : Profile
     {

@@ -1,7 +1,7 @@
 ﻿using Forum.API.Exceptions;
 using System.Security.Claims;
 
-namespace Forum.API.Extensions
+namespace Forum.API.Authentication
 {
     public static class ClaimsPrincipalExtensions
     {

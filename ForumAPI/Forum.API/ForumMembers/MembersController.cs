@@ -1,12 +1,11 @@
-﻿using Forum.API.Extensions;
-using Forum.API.ForumMembers;
+﻿using Forum.API.Authentication;
 using Forum.API.ForumMembers.DTOs;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers
+namespace Forum.API.ForumMembers
 {    
     [ApiController]
     public class MembersController(IForumMembersRepository forumMembersRepository) : ControllerBase
@@ -19,5 +18,14 @@ namespace Forum.API.Controllers
             var pagedResult = await forumMembersRepository.GetMembersAsync(memberParams);
             return Ok(pagedResult);
         }
+
+        [HttpPatch("api/members")]
+        [Authorize]
+        public async Task<ActionResult> UpdateMember([FromForm] UpdateForumMemberDto updateForumMemberDto)
+        {
+            updateForumMemberDto.Id = User.GetMemberId();
+            await forumMembersRepository.UpdateMemberAsync(updateForumMemberDto);
+            return NoContent();
+        } 
     }
 }

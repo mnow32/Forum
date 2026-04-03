@@ -1,6 +1,6 @@
-﻿using Forum.API.ForumUsers;
+﻿using Forum.API.Authentication.ForumUsers;
 
-namespace Forum.API.Tokens
+namespace Forum.API.Authentication.Tokens
 {
     public interface ITokenService
     {

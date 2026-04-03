@@ -1,6 +1,4 @@
-﻿using Forum.API.Middleware;
-
-namespace Forum.API.Extensions
+﻿namespace Forum.API.Exceptions
 {
     public static class ExceptionHandlingMiddlewareExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using Forum.API.ForumMembers;
 using Microsoft.AspNetCore.Identity;
 
-namespace Forum.API.ForumUsers
+namespace Forum.API.Authentication.ForumUsers
 {
     public class ForumUser : IdentityUser
     {

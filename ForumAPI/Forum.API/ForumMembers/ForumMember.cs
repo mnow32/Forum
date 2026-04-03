@@ -1,4 +1,5 @@
-﻿using Forum.API.ForumUsers;
+﻿using Forum.API.Authentication.ForumUsers;
+using Forum.API.Photos.Entities;
 using Forum.API.Posts;
 using Forum.API.Replies;
 using Forum.API.Topics;
@@ -12,9 +13,9 @@ namespace Forum.API.ForumMembers
         public required string Email { get; set; }
         public string? Gender { get; set; }
         public string? Country { get; set; }
-        public string? Descripiton { get; set; }
+        public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime LastActive { get; set; } = DateTime.UtcNow;
+        public DateTime? LastActive { get; set; } 
 
 
         // Mavigation properties
@@ -22,5 +23,6 @@ namespace Forum.API.ForumMembers
         public List<Reply> Replies { get; set; } = new();
         public List<Post> Posts { get; set; } = new();
         public List<Topic> Topics { get; set; } = new();
+        public MemberPhoto? Photo { get; set; }
     }
 }

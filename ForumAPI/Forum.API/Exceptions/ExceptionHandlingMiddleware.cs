@@ -1,8 +1,7 @@
 ﻿using Azure.Core;
-using Forum.API.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Middleware
+namespace Forum.API.Exceptions
 {
     public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
@@ -19,12 +18,26 @@ namespace Forum.API.Middleware
 
                 await context.Response.WriteAsync("You need to authenticate");
             }
+            catch (ForbiddenException ex)
+            {
+                logger.LogWarning(ex.Message);
+                context.Response.StatusCode = 403;
+
+                await context.Response.WriteAsync("Yoou cannot operate on this resource");
+            }
             catch (NotFoundException ex)
             {
                 logger.LogError(ex.Message);
                 context.Response.StatusCode = 404;
 
                 await context.Response.WriteAsync("Couldn't find resource");
+            }
+            catch (CloudinaryException ex)
+            {
+                logger.LogError(ex.Message);
+                context.Response.StatusCode = 500;
+
+                await context.Response.WriteAsync("Something went wrong");
             }
             catch (Exception ex)
             {
