@@ -25,6 +25,7 @@ namespace Forum.API.Posts
             }
             dbContext.Entry(topic).State = EntityState.Detached;
 
+            //TODO: Possibly split this query as in https://learn.microsoft.com/en-us/ef/core/querying/single-split-queries
             var query = dbContext.Posts
                 .AsQueryable()
                 .OrderBy(p => p.CreatedAt)

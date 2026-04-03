@@ -17,7 +17,7 @@ namespace Forum.API.Replies
 
         [HttpPost("api/posts/{id}/replies")]
         [Authorize]
-        public async Task<ActionResult> CreateReply([FromRoute] int postId, [FromBody] CreateReplyDto createReplyDto)
+        public async Task<ActionResult> CreateReply([FromRoute] int postId, [FromForm] CreateReplyDto createReplyDto)
         {
             if (!ModelState.IsValid)
             {

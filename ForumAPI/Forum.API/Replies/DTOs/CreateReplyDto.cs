@@ -10,5 +10,6 @@ namespace Forum.API.Replies.DTOs
 
         [StringLength(30000, MinimumLength = 5)]
         public required string Content { get; set; }
+        public IFormFileCollection? Photos { get; set; }
     }
 }

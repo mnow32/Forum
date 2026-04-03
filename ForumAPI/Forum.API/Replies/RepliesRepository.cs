@@ -3,12 +3,15 @@ using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
 using Forum.API.Data;
 using Forum.API.Exceptions;
+using Forum.API.Photos;
+using Forum.API.Photos.Entities;
 using Forum.API.Replies.DTOs;
+using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Replies
 {
-    public class RepliesRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService) : IRepliesRepository
+    public class RepliesRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : IRepliesRepository
     {
         public async Task<IEnumerable<ReplyDto>> GetRepliesByPostIdAsync(int postId)
         {
@@ -39,7 +42,25 @@ namespace Forum.API.Replies
             {
                 throw new ForbiddenException("Create failed - User doesn't have permission to create Post");
             }
-
+            if (createReplyDto.Photos is not null)
+            {
+                var uploadResults = await photoService.BulkUploadContentPhotosAsync(createReplyDto.Photos);
+                foreach (var result in uploadResults)
+                {
+                    if (result.Error is not null)
+                    {
+                        throw new CloudinaryException(result.Error.Message);
+                    }
+                    else
+                    {
+                        newReply.Photos.Add(new ReplyPhoto()
+                        {
+                            PublicId = result.PublicId,
+                            Url = result.SecureUrl.AbsoluteUri
+                        });
+                    }
+                }
+            }
             dbContext.Replies.Add(newReply);
             await dbContext.SaveChangesAsync();
 

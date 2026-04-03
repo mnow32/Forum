@@ -13,5 +13,6 @@ namespace Forum.API.Topics.DTOs
 
         [StringLength(30000, MinimumLength = 5)]
         public required string Description { get; set; }
+        public IFormFileCollection? Photos { get; set; }
     }
 }

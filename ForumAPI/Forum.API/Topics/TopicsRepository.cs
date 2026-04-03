@@ -5,12 +5,15 @@ using Forum.API.Data;
 using Forum.API.Exceptions;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
+using Forum.API.Photos;
+using Forum.API.Photos.Entities;
+using Forum.API.Posts.DTOs;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Topics
 {
-    public class TopicsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService) : ITopicsRepository
+    public class TopicsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : ITopicsRepository
     {
         public async Task<TopicDto> GetTopicByIdAsync(int id)
         {
@@ -67,7 +70,25 @@ namespace Forum.API.Topics
             {
                 throw new ForbiddenException("Create failed - User doesn't have permission to create Topic");
             }
-
+            if (createTopicDto.Photos is not null)
+            {
+                var uploadResults = await photoService.BulkUploadContentPhotosAsync(createTopicDto.Photos);
+                foreach (var result in uploadResults)
+                {
+                    if (result.Error is not null)
+                    {
+                        throw new CloudinaryException(result.Error.Message);
+                    }
+                    else
+                    {
+                        newTopic.Photos.Add(new TopicPhoto()
+                        {
+                            PublicId = result.PublicId,
+                            Url = result.SecureUrl.AbsoluteUri
+                        });
+                    }
+                }
+            }
             dbContext.Topics.Add(newTopic);
             await dbContext.SaveChangesAsync();
             return newTopic.Id;
