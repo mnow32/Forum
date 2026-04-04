@@ -7,5 +7,6 @@ namespace Forum.API.Photos
         Task<ImageUploadResult> UploadMemberPhotoAsync(IFormFile photo);
         Task<DeletionResult> DeleteMemberPhotoAsync(string publicId);
         Task<IEnumerable<ImageUploadResult>> BulkUploadContentPhotosAsync(IFormFileCollection photos);
+        Task<IEnumerable<DeletionResult>> BulkDeleteContentPhotosAsync(IEnumerable<string> publicIds);
     }
 }

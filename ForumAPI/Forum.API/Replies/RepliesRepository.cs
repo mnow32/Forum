@@ -85,7 +85,7 @@ namespace Forum.API.Replies
 
         public async Task DeleteReplyAsync(int replyId)
         {
-            var reply = await dbContext.Replies.FirstOrDefaultAsync(r => r.Id == replyId);
+            var reply = await dbContext.Replies.Include(r => r.Photos).FirstOrDefaultAsync(r => r.Id == replyId);
             if (reply is null)
             {
                 throw new NotFoundException($"Delete failed - couldn't find Reply with id: {replyId}");
@@ -94,6 +94,11 @@ namespace Forum.API.Replies
             if (!isAuthorized)
             {
                 throw new ForbiddenException("Delete failed - User doesn't have permission to delete Post");
+            }
+            if (reply.Photos is not null)
+            {
+                await photoService.BulkDeleteContentPhotosAsync(reply.Photos.Select(photo => photo.PublicId));
+                dbContext.Photos.RemoveRange(reply.Photos);
             }
             dbContext.Replies.Remove(reply);
             await dbContext.SaveChangesAsync();

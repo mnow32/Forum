@@ -8,6 +8,7 @@ using Forum.API.Pagination.Params;
 using Forum.API.Photos;
 using Forum.API.Photos.Entities;
 using Forum.API.Posts.DTOs;
+using Forum.API.Replies;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -113,7 +114,7 @@ namespace Forum.API.Topics
 
         public async Task DeleteTopicAsync(int topicId)
         {
-            var topic = await dbContext.Topics.FirstOrDefaultAsync(t => t.Id == topicId);
+            var topic = await dbContext.Topics.Include(t => t.Photos).FirstOrDefaultAsync(t => t.Id == topicId);
             if(topic is null)
             {
                 throw new NotFoundException($"Delete failed - couldn't find Topic with id: {topicId}");
@@ -122,6 +123,11 @@ namespace Forum.API.Topics
             if (!isAuthorized)
             {
                 throw new ForbiddenException("Delete failed - User doesn't have permission to delete Topic");
+            }
+            if (topic.Photos is not null)
+            {
+                await photoService.BulkDeleteContentPhotosAsync(topic.Photos.Select(photo => photo.PublicId));
+                dbContext.RemoveRange(topic.Photos);
             }
             dbContext.Topics.Remove(topic);
             await dbContext.SaveChangesAsync();

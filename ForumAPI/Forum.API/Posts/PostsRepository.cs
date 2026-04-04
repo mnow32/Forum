@@ -9,6 +9,7 @@ using Forum.API.Pagination.Params;
 using Forum.API.Photos;
 using Forum.API.Photos.Entities;
 using Forum.API.Posts.DTOs;
+using Forum.API.Replies;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,7 +100,7 @@ namespace Forum.API.Posts
 
         public async Task DeletePostAsync(int postId)
         {
-            var post = await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            var post = await dbContext.Posts.Include(p => p.Photos).FirstOrDefaultAsync(p => p.Id == postId);
             if (post is null)
             {
                 throw new NotFoundException($"Delete failed - couldn't find Post with id: {postId}");
@@ -108,6 +109,11 @@ namespace Forum.API.Posts
             if (!isAuthorized)
             {
                 throw new ForbiddenException("Delete failed - User doesn't have permission to delete Post");
+            }
+            if (post.Photos is not null)
+            {
+                await photoService.BulkDeleteContentPhotosAsync(post.Photos.Select(photo => photo.PublicId));
+                dbContext.Photos.RemoveRange(post.Photos);
             }
             dbContext.Posts.Remove(post);
             await dbContext.SaveChangesAsync();
