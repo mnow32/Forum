@@ -27,7 +27,7 @@ namespace Forum.API.Topics
 
         [HttpPost("api/boards/{boardId}/topics")]
         [Authorize]
-        public async Task<ActionResult> CreateTopic([FromRoute] int boardId, [FromBody] CreateTopicDto createTopicDto)
+        public async Task<ActionResult> CreateTopic([FromRoute] int boardId, [FromForm] CreateTopicDto createTopicDto)
         {
             if (!ModelState.IsValid)
             {

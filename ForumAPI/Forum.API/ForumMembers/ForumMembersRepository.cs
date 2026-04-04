@@ -14,7 +14,7 @@ namespace Forum.API.ForumMembers
     {
         public async Task<PaginationResult<ForumMemberDto>> GetMembersAsync(MemberParams memberParams)
         {
-            var query = dbContext.Members.AsQueryable().Include(m => m.Photo).AsNoTracking(); 
+            var query = dbContext.Members.AsQueryable().Include(m => m.Photo).OrderBy(m => m.CreatedAt).AsNoTracking(); 
 
             query = query.Where(m => m.Id != memberParams.CurrentMemberId);
             if(memberParams.DisplayName.Length > 0)
@@ -33,16 +33,18 @@ namespace Forum.API.ForumMembers
 
         public async Task UpdateMemberAsync(UpdateForumMemberDto updateForumMemberDto)
         {
-            var member = await dbContext.Members.FirstOrDefaultAsync(m => m.Id == updateForumMemberDto.Id);
+            var member = await dbContext.Members.Include(m => m.Photo).FirstOrDefaultAsync(m => m.Id == updateForumMemberDto.Id);
             if(member is null)
             {
                 throw new NotFoundException($"Update failed - couldn't find Memeber with id: {updateForumMemberDto.Id}");
             }
-            //TODO: Check if member already has profile picture and delete it
-
             mapper.Map(updateForumMemberDto, member);
             if(updateForumMemberDto.Photo is not null)
             {
+                if(member.Photo is not null)
+                {
+                    dbContext.Photos.Remove(member.Photo);
+                }
                 var uploadResult = await photoService.UploadMemberPhotoAsync(updateForumMemberDto.Photo);
                 if(uploadResult.Error is not null)
                 {

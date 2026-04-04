@@ -22,7 +22,6 @@ namespace Forum.API.Authentication.ForumUsers
             if (!result.Succeeded)
             {
                 //TODO: Add error logging
-                //result.Errors
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("identity", error.Description);

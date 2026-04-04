@@ -86,7 +86,7 @@ builder.Host.UseSerilog((context, configuration) =>
 
 var app = builder.Build();
 
-//app.UseExceptionHandling();
+app.UseExceptionHandling();
 
 using var scope = app.Services.CreateScope();
 {
