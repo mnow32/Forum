@@ -3,10 +3,10 @@ using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
 using Forum.API.Data;
 using Forum.API.Exceptions;
+using Forum.API.Exceptions.Models;
 using Forum.API.Photos;
 using Forum.API.Photos.Entities;
 using Forum.API.Replies.DTOs;
-using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Replies

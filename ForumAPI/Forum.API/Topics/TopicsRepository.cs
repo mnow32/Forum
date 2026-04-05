@@ -2,13 +2,11 @@
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
 using Forum.API.Data;
-using Forum.API.Exceptions;
+using Forum.API.Exceptions.Models;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Forum.API.Photos;
 using Forum.API.Photos.Entities;
-using Forum.API.Posts.DTOs;
-using Forum.API.Replies;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -127,7 +125,7 @@ namespace Forum.API.Topics
             if (topic.Photos is not null)
             {
                 await photoService.BulkDeleteContentPhotosAsync(topic.Photos.Select(photo => photo.PublicId));
-                dbContext.RemoveRange(topic.Photos);
+                dbContext.Photos.RemoveRange(topic.Photos);
             }
             dbContext.Topics.Remove(topic);
             await dbContext.SaveChangesAsync();

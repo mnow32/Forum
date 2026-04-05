@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Forum.API.Data;
-using Forum.API.Exceptions;
+using Forum.API.Exceptions.Models;
 using Forum.API.ForumMembers.DTOs;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;

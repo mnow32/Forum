@@ -1,4 +1,4 @@
-﻿using Forum.API.Exceptions;
+﻿using Forum.API.Exceptions.Models;
 using System.Security.Claims;
 
 namespace Forum.API.Authentication

@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Forum.API.Exceptions.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Exceptions

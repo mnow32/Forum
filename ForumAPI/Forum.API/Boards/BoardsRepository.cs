@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Forum.API.Boards.DTOs;
 using Forum.API.Data;
-using Forum.API.Exceptions;
+using Forum.API.Exceptions.Models;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Microsoft.EntityFrameworkCore;

@@ -4,13 +4,12 @@ using Forum.API.Authorization.Constants;
 using Forum.API.Boards;
 using Forum.API.Data;
 using Forum.API.Exceptions;
+using Forum.API.Exceptions.Models;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Forum.API.Photos;
 using Forum.API.Photos.Entities;
 using Forum.API.Posts.DTOs;
-using Forum.API.Replies;
-using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.API.Posts
