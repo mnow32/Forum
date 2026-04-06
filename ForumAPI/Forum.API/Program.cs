@@ -3,19 +3,56 @@ using Scalar.AspNetCore;
 using Serilog;
 using Forum.API.Exceptions;
 using Forum.API.Configuration;
+using Forum.API.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureServices(builder.Configuration);
+try
+{
+    builder.ConfigureServices(builder.Configuration);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Error configuring services: {ex.Message}");
+    throw;
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error configuring services: {ex.Message}");
+    throw;
+}
+
 
 var app = builder.Build();
 
 app.UseExceptionHandling();
 
+// migrate database and create initial data
 using var scope = app.Services.CreateScope();
 {
+    var dbContext = scope.ServiceProvider.GetRequiredService<ForumDbContext>();
+    var pendingMigrations = dbContext.Database.GetPendingMigrations();
+    if (pendingMigrations.Any())
+    {
+        dbContext.Database.Migrate();
+    }
+
     var seeder = scope.ServiceProvider.GetRequiredService<IForumSeeder>();
-    await seeder.SeedAsync();
+    try
+    {
+        await seeder.SeedAsync();
+    }
+    catch (InvalidOperationException ex)
+    {
+        Console.WriteLine($"Critical error during essential data seeding: {ex.Message}");
+        throw;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Critical error during essential data seeding: {ex.Message}");
+        throw;
+    }
 }
 
 app.UseSerilogRequestLogging();

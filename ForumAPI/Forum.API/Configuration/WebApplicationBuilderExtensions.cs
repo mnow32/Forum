@@ -26,18 +26,18 @@ namespace Forum.API.Configuration
         public static void ConfigureServices(this WebApplicationBuilder builder, IConfiguration configuration)
         {
             var connectionString = builder.Configuration["ConnectionStrings:ForumDbConnection"]
-                ?? throw new InvalidConfigurationException("Could not retrieve database connection string from configuration file");
+                ?? throw new InvalidOperationException("Could not retrieve database connection string from configuration file");
 
-            var automapperLicenseKey = builder.Configuration["Forum:AutomapperLicenseKey"]
-                ?? throw new InvalidConfigurationException("Could not retrieve Automapper license key from configuration file");
+            var automapperLicenseKey = builder.Configuration["Forum:AutomapperLicenseKey"] 
+                ?? throw new InvalidOperationException("Could not retrieve Automapper license key from configuration file");
 
             var tokenKey = builder.Configuration["Forum:TokenKey"]
-                ?? throw new InvalidConfigurationException("Could not retrieve token key from configuration file");
+                ?? throw new InvalidOperationException("Could not retrieve token key from configuration file");
 
             var cloudinarySettings = builder.Configuration.GetSection("Forum:CloudinarySettings");
             if (!cloudinarySettings.Exists())
             {
-                throw new InvalidConfigurationException("Could not retrieve Cloudinary settings from configuration file");
+                throw new InvalidOperationException("Could not retrieve Cloudinary settings from configuration file");
             }
 
             // Add services to the container.

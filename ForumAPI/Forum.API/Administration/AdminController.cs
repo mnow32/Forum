@@ -12,7 +12,7 @@ namespace Forum.API.Administration
     public class AdminController(UserManager<ForumUser> userManager, ForumDbContext dbContext) : ControllerBase
     {
         [HttpGet("api/admin/users")]
-        //[Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
+        [Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
         public async Task<ActionResult<IEnumerable<object>>> GetUsersWithRoles()
         {
             var usersWithRoles = await (from user in dbContext.Users
@@ -31,7 +31,7 @@ namespace Forum.API.Administration
         }
 
         [HttpPost("api/admin/users/{userId}/assign-roles")]
-        //[Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
+        [Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
         public async Task<ActionResult<IEnumerable<string>>> AddToRoles([FromRoute] string userId, [FromBody] List<string> newRoles)
         {
             List<string> acceptedRoles = new()
@@ -76,7 +76,7 @@ namespace Forum.API.Administration
         }
 
         [HttpPost("api/admin/users/{userId}/unassign-roles")]
-        //[Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
+        [Authorize(Policy = AuthorizationPolicies.RequireAdministrator)]
         public async Task<ActionResult<IEnumerable<string>>> RemoveFromRoles([FromRoute] string userId, [FromBody] List<string> rolesToRemove)
         {
             List<string> acceptedRoles = new()

@@ -22,10 +22,9 @@ namespace Forum.API.Authentication.ForumUsers
             if (!result.Succeeded)
             {
                 //TODO: Add error logging
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("identity", error.Description);
-                }
+                var errors = result.Errors.Select(error => error.Description);
+                var message = string.Join(", ", errors);
+                ModelState.AddModelError("identity", message);                
 
                 return ValidationProblem();
             }
