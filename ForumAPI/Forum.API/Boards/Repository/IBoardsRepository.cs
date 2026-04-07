@@ -7,7 +7,6 @@ namespace Forum.API.Boards.Repository
     public interface IBoardsRepository
     {
         Task<PaginationResult<BoardDto>> GetBoardsAsync(BoardParams boardParams);
-        Task<BoardDto> GetBoardByIdAsync(int id);
         Task<int> CreateBoardAsync(CreateBoardDto boardDto);
         Task UpdateBoardAsync(int id, UpdateBoardDto boardDto);
         Task DeleteBoardAsync(int id);

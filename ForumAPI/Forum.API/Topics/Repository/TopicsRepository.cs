@@ -14,32 +14,15 @@ namespace Forum.API.Topics.Repository
 {
     public class TopicsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : ITopicsRepository
     {
-        public async Task<TopicDto> GetTopicByIdAsync(int id)
-        {
-            var topic = await dbContext.Topics
-                .Include(t => t.Posts)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(t => t.Id == id);
-
-            if (topic is null)
-            {
-                throw new NotFoundException($"Read failed - couldn't find Topic with id: {id}");
-            }
-
-            TopicDto topicDto = mapper.Map<TopicDto>(topic);
-            return topicDto;
-        }
-
         public async Task<PaginationResult<TopicDto>> GetBoardTopicsByIdAsync(int boardId, TopicParams topicParams)
         {
-            var board = await dbContext.Boards.FirstOrDefaultAsync(b => b.Id == boardId);
+            var board = await dbContext.Boards.AsNoTracking().FirstOrDefaultAsync(b => b.Id == boardId);
             if(board is null)
             {
                 throw new NotFoundException($"Read failed - couldn't find Board with id: {boardId} to retrieve Topics");
             }
-            dbContext.Entry(board).State = EntityState.Detached;
 
-            var query = dbContext.Topics.AsQueryable().AsNoTracking();
+            var query = dbContext.Topics.AsQueryable().Include(t => t.Photos).AsNoTracking().Where(t => t.BoardId == boardId);
             if(topicParams.Title.Length > 0)
             {
                 query = query.Where(t => t.Title.Contains(topicParams.Title));

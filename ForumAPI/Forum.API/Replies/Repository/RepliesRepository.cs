@@ -13,22 +13,6 @@ namespace Forum.API.Replies.Repository
 {
     public class RepliesRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : IRepliesRepository
     {
-        public async Task<IEnumerable<ReplyDto>> GetRepliesByPostIdAsync(int postId)
-        {
-            var post = await dbContext.Posts
-                .Include(p => p.Replies)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == postId);
-            if (post is null)
-            {
-                throw new NotFoundException($"Read failed - couldn't find Post with id: {postId} to read Replies");
-            }
-
-            IEnumerable<ReplyDto> replyDtos = mapper.Map<IEnumerable<ReplyDto>>(post.Replies);
-
-            return replyDtos;
-        }
-
         public async Task<int> CreateReplyAsync(CreateReplyDto createReplyDto)
         {
             var post = dbContext.Posts.FirstOrDefaultAsync(p => p.Id == createReplyDto.PostId);

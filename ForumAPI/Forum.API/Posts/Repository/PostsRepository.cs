@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
-using Forum.API.Boards;
 using Forum.API.Data;
-using Forum.API.Exceptions;
 using Forum.API.Exceptions.Models;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
@@ -18,21 +16,22 @@ namespace Forum.API.Posts.Repository
     {
         public async Task<PaginationResult<PostDto>> GetTopicPostsByIdAsync(int topicId, PagingParams pagingParams)
         {
-            var topic = await dbContext.Topics.FirstOrDefaultAsync(p => p.Id == topicId);
+            var topic = await dbContext.Topics.AsNoTracking().FirstOrDefaultAsync(p => p.Id == topicId);
             if(topic is null)
             {
                 throw new NotFoundException($"Read failed - couldn't find Topic with id: {topicId} to retrieve Posts");
             }
-            dbContext.Entry(topic).State = EntityState.Detached;
 
             //TODO: Possibly split this query as in https://learn.microsoft.com/en-us/ef/core/querying/single-split-queries
             var query = dbContext.Posts
                 .AsQueryable()
-                .OrderBy(p => p.CreatedAt)
-                .Include(p => p.Replies
-                    .OrderBy(r => r.CreatedAt))
+                .OrderBy(p => p.CreatedAt).ThenBy(p => p.Id)
                 .Include(p => p.Photos)
-                .AsNoTracking();
+                .Include(p => p.Replies                    
+                    .OrderBy(r => r.CreatedAt).ThenBy(r => r.Id))
+                    .ThenInclude(r => r.Photos)
+                .AsNoTracking()
+                .AsSplitQuery();
 
             (PaginationMetadata metadata, List<Post> posts) = await PaginationHelper.CreatePagingAsync(query, pagingParams.PageNumber, pagingParams.PageSize);
 

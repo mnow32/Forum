@@ -6,7 +6,6 @@ namespace Forum.API.Replies.Repository
     {
         Task<int> CreateReplyAsync(CreateReplyDto createReplyDto);
         Task DeleteReplyAsync(int replyId);
-        Task<IEnumerable<ReplyDto>> GetRepliesByPostIdAsync(int postId);
         Task UpdateReplyAsync(int replyId, UpdateReplyDto updateReplyDto);
     }
 }

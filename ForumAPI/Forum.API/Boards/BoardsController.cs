@@ -19,13 +19,6 @@ namespace Forum.API.Boards
             return Ok(pagedResult);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BoardDto>> GetBoardById([FromRoute] int id)
-        {
-            var board = await boardsRepository.GetBoardByIdAsync(id);
-            return Ok(board);
-        }
-
         [HttpPost]
         [Authorize(Policy = AuthorizationPolicies.RequireModerator)]
         public async Task<ActionResult> CreateBoard([FromBody] CreateBoardDto boardDto)
@@ -35,7 +28,7 @@ namespace Forum.API.Boards
                 return BadRequest(ModelState); 
             } 
             int id = await boardsRepository.CreateBoardAsync(boardDto);
-            return CreatedAtAction(nameof(GetBoardById), new { id }, null);
+            return CreatedAtAction(nameof(GetAllBoards), null, null);
         }
 
         [HttpPatch("{id}")]

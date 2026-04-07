@@ -7,7 +7,6 @@ namespace Forum.API.Topics.Repository
 {
     public interface ITopicsRepository
     {
-        Task<TopicDto> GetTopicByIdAsync(int id);
         Task<PaginationResult<TopicDto>> GetBoardTopicsByIdAsync(int boardId, TopicParams topicParams);
         Task<int> CreateTopicAsync(CreateTopicDto createTopicDto);
         Task UpdateTopicAsync(int topicId, UpdateTopicDto updateTopicDto);

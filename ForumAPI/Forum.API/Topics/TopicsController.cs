@@ -12,14 +12,6 @@ namespace Forum.API.Topics
     [ApiController]
     public class TopicsController(ITopicsRepository topicsRepository) : ControllerBase
     {
-        
-        [HttpGet("api/topics/{topicId}")]
-        public async Task<ActionResult<TopicDto>> GetTopicById([FromRoute] int topicId)
-        {
-            TopicDto topicDto = await topicsRepository.GetTopicByIdAsync(topicId);
-            return Ok(topicDto);
-        }
-
         [HttpGet("api/boards/{boardId}/topics")]
         public async Task<ActionResult<PaginationResult<TopicDto>>> GetTopicsForBoard([FromRoute] int boardId, [FromQuery] TopicParams topicParams)
         {
@@ -39,7 +31,7 @@ namespace Forum.API.Topics
             createTopicDto.MemberId = User.GetMemberId();
             createTopicDto.MemberName = User.GetMemberName();
             int id = await topicsRepository.CreateTopicAsync(createTopicDto);
-            return CreatedAtAction(nameof(GetTopicById), new { id }, null);
+            return CreatedAtAction(nameof(GetTopicsForBoard), new { boardId }, null);
         }
 
         [HttpPatch("api/topics/{topicId}")]

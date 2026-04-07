@@ -27,23 +27,7 @@ namespace Forum.API.Boards.Repository
                 Items = mapper.Map<List<BoardDto>>(result.Items)
             };
         }
-
-        public async Task<BoardDto> GetBoardByIdAsync(int id)
-        {
-            var board = await dbContext.Boards
-                .Include(
-                    b => b.Topics
-                        .OrderByDescending(t => t.CreatedAt))
-                .AsNoTracking()
-                .FirstOrDefaultAsync(b => b.Id == id);
-            if (board is null)
-            {
-                throw new NotFoundException($"Read failed - couldn't find Board with id: {id}");
-            }
-            var boardDto = mapper.Map<BoardDto>(board);
-            return boardDto;
-        }
-
+                
         public async Task<int> CreateBoardAsync(CreateBoardDto boardDto)
         {
             var newBoard = mapper.Map<Board>(boardDto);

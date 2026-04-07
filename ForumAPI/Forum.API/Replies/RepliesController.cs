@@ -10,13 +10,6 @@ namespace Forum.API.Replies
     [ApiController]
     public class RepliesController(IRepliesRepository repliesRepository) : ControllerBase
     {
-        [HttpGet("api/posts/{id}/replies")]
-        public async Task<ActionResult<IEnumerable<ReplyDto>>> GetPostReplies([FromRoute] int postId)
-        {
-            IEnumerable<ReplyDto> replies = await repliesRepository.GetRepliesByPostIdAsync(postId);
-            return Ok(replies);
-        }
-
         [HttpPost("api/posts/{id}/replies")]
         [Authorize(Policy = AuthorizationPolicies.RequireMember)]
         public async Task<ActionResult> CreateReply([FromRoute] int postId, [FromForm] CreateReplyDto createReplyDto)
