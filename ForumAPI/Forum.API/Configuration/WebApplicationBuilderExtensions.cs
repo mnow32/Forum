@@ -13,7 +13,6 @@ using Forum.API.Topics.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Reflection;
@@ -44,7 +43,7 @@ namespace Forum.API.Configuration
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            builder.Services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
             builder.Services.Configure<CloudinarySettings>(cloudinarySettings);
             builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlServer(connectionString).EnableSensitiveDataLogging());
             builder.Services.AddScoped<IBoardsRepository, BoardsRepository>();

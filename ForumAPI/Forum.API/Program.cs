@@ -61,7 +61,24 @@ app.UseSerilogRequestLogging();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options
+        .WithTitle("Forum API")
+        .WithTheme(ScalarTheme.Kepler)
+        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+
+        options
+            .AddPreferredSecuritySchemes("Bearer")
+            .AddHttpAuthentication(
+                "Bearer",
+                auth =>
+                {
+                    auth.Token = "";
+                }
+            )
+            .EnablePersistentAuthentication();
+    });
     
 }
 
