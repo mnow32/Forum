@@ -2,7 +2,7 @@
 using Forum.API.Pagination.Params;
 using Forum.API.Posts.DTOs;
 
-namespace Forum.API.Posts
+namespace Forum.API.Posts.Repository
 {
     public interface IPostsRepository
     {

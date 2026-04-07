@@ -1,5 +1,7 @@
 ﻿using Forum.API.Authentication;
+using Forum.API.Authorization.Constants;
 using Forum.API.Replies.DTOs;
+using Forum.API.Replies.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +18,7 @@ namespace Forum.API.Replies
         }
 
         [HttpPost("api/posts/{id}/replies")]
-        [Authorize]
+        [Authorize(Policy = AuthorizationPolicies.RequireMember)]
         public async Task<ActionResult> CreateReply([FromRoute] int postId, [FromForm] CreateReplyDto createReplyDto)
         {
             if (!ModelState.IsValid)

@@ -8,7 +8,7 @@ using Forum.API.Photos;
 using Forum.API.Photos.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.ForumMembers
+namespace Forum.API.ForumMembers.Repository
 {
     public class ForumMembersRepository(ForumDbContext dbContext, IPhotoService photoService, IMapper mapper) : IForumMembersRepository
     {
@@ -31,12 +31,23 @@ namespace Forum.API.ForumMembers
             };
         }
 
+        public async Task<ForumMemberDto> GetCurrentMemberAsync(string memberId)
+        {
+            var member = await dbContext.Members.Include(m => m.Photo).AsNoTracking().FirstOrDefaultAsync(m => m.Id == memberId);
+            if(member is null)
+            {
+                throw new NotFoundException($"Read failed - couldn't find Member with id: {memberId}");
+            }
+            var memberDto = mapper.Map<ForumMemberDto>(member);
+            return memberDto;
+        }
+
         public async Task UpdateMemberAsync(UpdateForumMemberDto updateForumMemberDto)
         {
             var member = await dbContext.Members.Include(m => m.Photo).FirstOrDefaultAsync(m => m.Id == updateForumMemberDto.Id);
             if(member is null)
             {
-                throw new NotFoundException($"Update failed - couldn't find Memeber with id: {updateForumMemberDto.Id}");
+                throw new NotFoundException($"Update failed - couldn't find Member with id: {updateForumMemberDto.Id}");
             }
             mapper.Map(updateForumMemberDto, member);
             if(updateForumMemberDto.Photo is not null)

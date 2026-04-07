@@ -1,6 +1,6 @@
 ﻿using Forum.API.Replies.DTOs;
 
-namespace Forum.API.Replies
+namespace Forum.API.Replies.Repository
 {
     public interface IRepliesRepository
     {

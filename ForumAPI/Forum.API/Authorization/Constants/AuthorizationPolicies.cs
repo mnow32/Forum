@@ -4,5 +4,6 @@
     {
         public const string RequireAdministrator = "RequireAtLeastAdminRole";
         public const string RequireModerator = "RequireAtLeastModeratorRole";
+        public const string RequireMember = "RequireMember";
     }
 }

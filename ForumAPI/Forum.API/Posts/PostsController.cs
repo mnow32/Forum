@@ -1,8 +1,10 @@
 ﻿using Forum.API.Authentication;
+using Forum.API.Authorization.Constants;
 using Forum.API.Boards;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Forum.API.Posts.DTOs;
+using Forum.API.Posts.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +21,7 @@ namespace Forum.API.Posts
         }
 
         [HttpPost("api/topics/{topicId}/posts")]
-        [Authorize]
+        [Authorize(Policy = AuthorizationPolicies.RequireMember)]
         public async Task<ActionResult> CreatePost([FromRoute] int topicId, [FromForm] CreatePostDto createPostDto)
         {
             if (!ModelState.IsValid)

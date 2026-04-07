@@ -2,14 +2,14 @@
 using Forum.API.Authentication.Tokens;
 using Forum.API.Authorization;
 using Forum.API.Authorization.Constants;
-using Forum.API.Boards;
+using Forum.API.Boards.Repository;
 using Forum.API.Data;
-using Forum.API.ForumMembers;
+using Forum.API.ForumMembers.Repository;
 using Forum.API.Photos;
-using Forum.API.Posts;
-using Forum.API.Replies;
+using Forum.API.Posts.Repository;
+using Forum.API.Replies.Repository;
 using Forum.API.Seeding;
-using Forum.API.Topics;
+using Forum.API.Topics.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -86,7 +86,8 @@ namespace Forum.API.Configuration
 
             builder.Services.AddAuthorizationBuilder()
                 .AddPolicy(AuthorizationPolicies.RequireAdministrator, policy => policy.RequireRole(ForumRoles.Administrator))
-                .AddPolicy(AuthorizationPolicies.RequireModerator, policy => policy.RequireRole(ForumRoles.Administrator, ForumRoles.Moderator));
+                .AddPolicy(AuthorizationPolicies.RequireModerator, policy => policy.RequireRole(ForumRoles.Administrator, ForumRoles.Moderator))
+                .AddPolicy(AuthorizationPolicies.RequireMember, policy => policy.RequireRole(ForumRoles.Member));
 
             builder.Host.UseSerilog((context, configuration) =>
             {

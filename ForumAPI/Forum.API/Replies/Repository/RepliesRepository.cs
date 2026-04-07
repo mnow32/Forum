@@ -9,7 +9,7 @@ using Forum.API.Photos.Entities;
 using Forum.API.Replies.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Replies
+namespace Forum.API.Replies.Repository
 {
     public class RepliesRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : IRepliesRepository
     {

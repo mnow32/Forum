@@ -12,7 +12,7 @@ using Forum.API.Photos.Entities;
 using Forum.API.Posts.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Posts
+namespace Forum.API.Posts.Repository
 {
     public class PostsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : IPostsRepository
     {

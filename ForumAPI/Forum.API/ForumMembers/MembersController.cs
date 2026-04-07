@@ -1,5 +1,7 @@
 ﻿using Forum.API.Authentication;
+using Forum.API.Authorization.Constants;
 using Forum.API.ForumMembers.DTOs;
+using Forum.API.ForumMembers.Repository;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +21,17 @@ namespace Forum.API.ForumMembers
             return Ok(pagedResult);
         }
 
-        [HttpPatch("api/members")]
-        [Authorize]
+        [HttpGet("api/members/me")]
+        [Authorize(Policy = AuthorizationPolicies.RequireMember)]
+        public async Task<ActionResult<ForumMemberDto>> GetCurrentMember()
+        {
+            var memberId = User.GetMemberId();
+            var memberDto = await forumMembersRepository.GetCurrentMemberAsync(memberId);
+            return Ok(memberDto);
+        }
+
+        [HttpPatch("api/members/me")]
+        [Authorize(Policy = AuthorizationPolicies.RequireMember)]
         public async Task<ActionResult> UpdateMember([FromForm] UpdateForumMemberDto updateForumMemberDto)
         {
             updateForumMemberDto.Id = User.GetMemberId();

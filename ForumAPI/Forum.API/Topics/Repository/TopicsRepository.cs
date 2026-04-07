@@ -10,7 +10,7 @@ using Forum.API.Photos.Entities;
 using Forum.API.Topics.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Topics
+namespace Forum.API.Topics.Repository
 {
     public class TopicsRepository(ForumDbContext dbContext, IMapper mapper, IOperationAuthorizationService authorizationService, IPhotoService photoService) : ITopicsRepository
     {

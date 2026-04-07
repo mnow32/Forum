@@ -1,5 +1,6 @@
 ﻿using Forum.API.Authorization.Constants;
 using Forum.API.Boards.DTOs;
+using Forum.API.Boards.Repository;
 using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Microsoft.AspNetCore.Authorization;

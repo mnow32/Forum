@@ -6,7 +6,7 @@ using Forum.API.Pagination;
 using Forum.API.Pagination.Params;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.API.Boards
+namespace Forum.API.Boards.Repository
 {
     public class BoardsRepository(ForumDbContext dbContext, IMapper mapper) : IBoardsRepository
     {

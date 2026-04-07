@@ -3,7 +3,7 @@ using Forum.API.Pagination.Params;
 using Forum.API.Topics.DTOs;
 using System.Security.Claims;
 
-namespace Forum.API.Topics
+namespace Forum.API.Topics.Repository
 {
     public interface ITopicsRepository
     {

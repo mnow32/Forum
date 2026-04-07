@@ -2,7 +2,6 @@
 using Forum.API.Authorization.Constants;
 using Forum.API.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Protocols.Configuration;
 
 namespace Forum.API.Seeding
 {
@@ -41,7 +40,7 @@ namespace Forum.API.Seeding
                     var adminPassword = configuration["Forum:AdminAccount:Password"] 
                         ?? throw new InvalidOperationException("Couldn't retrieve Admin password from configuration file");
 
-                    var adminUser = new ForumUser() { DisplayName = adminName, Email = adminEmail };
+                    var adminUser = new ForumUser() { DisplayName = adminName, UserName = adminEmail, Email = adminEmail };
 
                     var createAdminResult = await userManager.CreateAsync(adminUser, adminPassword);
 
